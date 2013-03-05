@@ -80,27 +80,6 @@ public class GamePanel extends JPanel implements MouseListener{
         
         this.gameModel.changeColor(row, col);
         
-        /*Logic here to decide if the
-         * location that the piece was clicked
-         * was a piece they wanted to remove,
-         * a piece they wanted to move,
-         * or just a simple click
-         * */
-        
-        
-        //Determine phase of game here
-        //If phase 1 (place phase)
-		
-//        //If piece to move:
-//        // if(gameModel.pi)
-//        //
-//         
-
-        //If phase 2 (game phase)
-        
-        
-        
-        //If phase 3 ()
         this.revalidate();
         this.repaint();
 	}

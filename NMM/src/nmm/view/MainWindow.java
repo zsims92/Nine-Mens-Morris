@@ -46,6 +46,39 @@ public class MainWindow extends JFrame implements WindowListener, MouseListener{
         this.setSize(600,600);
         
         NMMGameModel nmm = new NMMGameModel();
+        this.createMenuBar();
+
+        
+        this.setLayout(new BorderLayout());
+        
+        this.sd = new StartDisplay();
+        this.gb = new GameBoard(nmm, this);
+        this.vs = new VictoryScreen(nmm.getPlayer1(), nmm.getPlayer2());
+        
+        ///
+        this.vs.add(new JButton());
+        ///
+        
+		this.sd.setButtonListener(this);
+        
+        cards = new CardLayout();
+        cardPanel = new JPanel();
+        cardPanel.setLayout(cards);
+        
+		cardPanel.add(this.gb, "GameBoard");
+		cardPanel.add(this.sd, "StartScreen");
+        cards.show(cardPanel, "StartScreen");
+		
+        
+        
+        this.addMouseListener(this);
+		this.add(cardPanel);
+		this.setSize(950,850);
+		this.setResizable(false);
+		this.setVisible(true);
+	}
+	
+	private void createMenuBar() {
         jMenuBar1 = new JMenuBar();
         jMenu1 = new JMenu();
         jMenuItem1 = new JMenuItem();
@@ -80,37 +113,8 @@ public class MainWindow extends JFrame implements WindowListener, MouseListener{
         jMenuBar1.add(jMenu3);
 
         this.setJMenuBar(jMenuBar1);
-        
-        this.setLayout(new BorderLayout());
-        
-        this.sd = new StartDisplay();
-        this.gb = new GameBoard(nmm, this);
-        this.vs = new VictoryScreen(nmm.getPlayer1(), nmm.getPlayer2());
-        
-        ///
-        this.vs.add(new JButton());
-        ///
-        
-		this.gb.setButtonListener(this);
-		this.sd.setButtonListener(this);
-        
-        cards = new CardLayout();
-        cardPanel = new JPanel();
-        cardPanel.setLayout(cards);
-        
-		cardPanel.add(this.gb, "GameBoard");
-		cardPanel.add(this.sd, "StartScreen");
-        cards.show(cardPanel, "StartScreen");
-		
-        
-        
-        this.addMouseListener(this);
-		this.add(cardPanel);
-		this.setSize(950,850);
-		this.setResizable(false);
-		this.setVisible(true);
 	}
-	
+
 	public void changeCard(String card){
 		this.cards.show(cardPanel, card);
 	}

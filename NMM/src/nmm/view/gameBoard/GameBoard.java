@@ -3,6 +3,8 @@ package nmm.view.gameBoard;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -45,6 +47,11 @@ public class GameBoard extends JPanel implements MouseListener{
 		
 		but = new JButton("This is the game Display");
 		but.setActionCommand("This is the game Display");
+        but.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent evt){
+        		changeWindow(evt);
+        	}
+        });
 		
 		this.add(but, BorderLayout.NORTH);
 		this.setVisible(true);
@@ -52,6 +59,9 @@ public class GameBoard extends JPanel implements MouseListener{
 	
 	public void setGameModel(NMMGameModel game){
 		this.gameModel = game;
+	}
+	private void changeWindow(ActionEvent evt) {
+		this.mw.changeCard("StartScreen");			
 	}
 	
 	@Override
@@ -62,12 +72,6 @@ public class GameBoard extends JPanel implements MouseListener{
 		this.gp.repaint();
 	}
 	
-	public void setButtonListener(MainWindow mw){
-		this.but.addMouseListener(mw);
-	}	
-	public void setPanelListener(MainWindow mw){
-		this.addMouseListener(mw);
-	}
 	public JButton getButton(){
 		return this.but;
 	}
