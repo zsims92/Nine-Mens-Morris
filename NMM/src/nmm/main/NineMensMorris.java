@@ -12,7 +12,7 @@ public class NineMensMorris {
            @Override
             public void run()
             {
-                new MainWindow(null, null);         
+                new MainWindow();         
             }
         });
     }

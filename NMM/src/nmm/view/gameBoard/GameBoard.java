@@ -19,6 +19,7 @@ public class GameBoard extends JPanel implements MouseListener{
 	 */
 	private static final long serialVersionUID = 2364448613335062368L;
 	private NMMGameModel gameModel;
+	private MainWindow mw;
 	private JButton but;
 	private PlayerPanel p1;
 	private PlayerPanel p2;
@@ -26,14 +27,16 @@ public class GameBoard extends JPanel implements MouseListener{
 	
 	private boolean status = true;
 	
-	public GameBoard(Player p1, Player p2){
-		this.p1 = new PlayerPanel(p1);
-		this.p2 = new PlayerPanel(p2);
+	public GameBoard(NMMGameModel nmm, MainWindow mw){
+		this.gameModel = nmm;
+		this.mw = mw;
+		this.p1 = new PlayerPanel(nmm.getPlayer1());
+		this.p2 = new PlayerPanel(nmm.getPlayer2());
 		this.gameModel = new NMMGameModel();
 		this.gp = new GamePanel(this.gameModel);
 		
 		
-		this.setSize(950, 950);
+		this.setSize(950, 800);
 		this.setBackground(Color.BLUE);
 		this.setLayout(new BorderLayout());
 		this.add(this.p1, BorderLayout.WEST);

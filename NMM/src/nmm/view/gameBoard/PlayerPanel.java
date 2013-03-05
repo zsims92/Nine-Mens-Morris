@@ -24,7 +24,7 @@ public class PlayerPanel extends JPanel{
 		biggerFont = new Font("SansSerif", Font.BOLD, CELL_SIZE/2);
 		
 		this.setPreferredSize(
-                new Dimension(CELL_SIZE * COLS, CELL_SIZE * ROWS));
+                new Dimension(CELL_SIZE * COLS, 700));
          this.setBackground(Color.WHITE);
 	}
 

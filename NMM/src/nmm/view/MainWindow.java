@@ -9,6 +9,7 @@ import java.awt.event.WindowListener;
 
 import javax.swing.*;
 
+import nmm.model.NMMGameModel;
 import nmm.model.user.Player;
 import nmm.view.gameBoard.GameBoard;
 
@@ -26,28 +27,65 @@ public class MainWindow extends JFrame implements WindowListener, MouseListener{
 	
 	private JPanel cardPanel;
 	
-	private JMenuBar menuBar;
-	private JMenu file;
-	private JMenuItem quit;
+	private JMenuBar jMenuBar1;
+	  
+	private JMenu jMenu1;
+	private JMenu jMenu2;
+	private JMenu jMenu3;
 	
-	public MainWindow(Player p1, Player p2){
+	private JMenuItem jMenuItem1;
+	private JMenuItem jMenuItem2;
+	private JMenuItem jMenuItem3;
+	private JMenuItem jMenuItem4;
+	private JMenuItem jMenuItem5;
+	private JMenuItem jMenuItem6;
+	
+	public MainWindow(){
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Nine Mens Morris");
         this.setSize(600,600);
         
-        this.menuBar = new JMenuBar();
-        this.file = new JMenu();
-        this.quit = new JMenuItem("Quit");
+        NMMGameModel nmm = new NMMGameModel();
+        jMenuBar1 = new JMenuBar();
+        jMenu1 = new JMenu();
+        jMenuItem1 = new JMenuItem();
+        jMenuItem2 = new JMenuItem();
+        jMenuItem3 = new JMenuItem();
+        jMenu2 = new JMenu();
+        jMenuItem4 = new JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem5 = new JMenuItem();
+        jMenuItem6 = new JMenuItem();
+           
+        jMenu1.setText("File");
+        jMenu2.setText("Edit");
+        jMenu3.setText("Help");
+
+        jMenuItem1.setText("New Game");
+        jMenuItem2.setText("Cheat Mode");
+        jMenuItem3.setText("Quit");
+        jMenuItem4.setText("Undo");
+        jMenuItem5.setText("How to Play");
+        jMenuItem6.setText("About");
+       
+        jMenu1.add(jMenuItem1);
+        jMenu1.add(jMenuItem2);
+        jMenu1.add(jMenuItem3);
+        jMenu2.add(jMenuItem4);
+        jMenu3.add(jMenuItem5);
+        jMenu3.add(jMenuItem6);
         
-        this.file.add(this.quit);
-        this.menuBar.add(this.file);
+        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(jMenu3);
+
+        this.setJMenuBar(jMenuBar1);
         
-        this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
         
         this.sd = new StartDisplay();
-        this.gb = new GameBoard(p1, p2);
-        this.vs = new VictoryScreen(p1, p2);
+        this.gb = new GameBoard(nmm, this);
+        this.vs = new VictoryScreen(nmm.getPlayer1(), nmm.getPlayer2());
         
         ///
         this.vs.add(new JButton());
@@ -68,7 +106,7 @@ public class MainWindow extends JFrame implements WindowListener, MouseListener{
         
         this.addMouseListener(this);
 		this.add(cardPanel);
-		this.setSize(950,950);
+		this.setSize(950,850);
 		this.setResizable(false);
 		this.setVisible(true);
 	}

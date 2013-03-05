@@ -1,5 +1,7 @@
 package nmm.model;
 
+import java.awt.Color;
+
 import nmm.model.user.*;
 
 public class NMMGameModel {
@@ -7,7 +9,7 @@ public class NMMGameModel {
 
 	public Player getPlayerTurn() {
 		this.boardArray = newBoard();
-		return new Player();
+		return new Player("NAME NEEDED", Color.CYAN.toString());
 	}
 
 	public int[][] newBoard() {
