@@ -2,7 +2,7 @@ package nmm.model;
 
 import java.awt.Color;
 
-import nmm.model.user.*;
+import nmm.model.user.Player;
 
 public class GamePiece {
 	private Color color;

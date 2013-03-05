@@ -12,7 +12,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import nmm.model.NMMGameModel;
+import nmm.controller.NMMGameModel;
 
 public class GamePanel extends JPanel implements MouseListener{
 
@@ -25,8 +25,10 @@ public class GamePanel extends JPanel implements MouseListener{
 	private static final int CELL_SIZE = 100;
 	private BufferedImage board;
 	private NMMGameModel gameModel;
+	private GameBoard gb;
 	
-	public GamePanel(NMMGameModel game){
+	public GamePanel(NMMGameModel game, GameBoard gb){
+		this.gb = gb;
 		this.gameModel = game;
 		try {
 			this.board = ImageIO.read(new File("resources\\nmmBoard.png"));

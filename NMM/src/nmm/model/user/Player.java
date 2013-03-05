@@ -2,8 +2,9 @@ package nmm.model.user;
 
 import java.awt.Color;
 import java.lang.reflect.Field;
-import java.util.*;
-import nmm.model.*;
+import java.util.ArrayList;
+
+import nmm.model.GamePiece;
 
 public class Player {
 	private String name;

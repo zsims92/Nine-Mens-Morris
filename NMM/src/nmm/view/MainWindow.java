@@ -7,10 +7,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 
-import nmm.model.NMMGameModel;
-import nmm.model.user.Player;
+import nmm.controller.NMMGameModel;
 import nmm.view.gameBoard.GameBoard;
 
 public class MainWindow extends JFrame implements WindowListener, MouseListener{

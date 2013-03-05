@@ -8,10 +8,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
-import nmm.model.NMMGameModel;
-import nmm.model.user.Player;
+import nmm.controller.NMMGameModel;
 import nmm.view.MainWindow;
 
 public class GameBoard extends JPanel implements MouseListener{
@@ -35,7 +35,7 @@ public class GameBoard extends JPanel implements MouseListener{
 		this.p1 = new PlayerPanel(nmm.getPlayer1());
 		this.p2 = new PlayerPanel(nmm.getPlayer2());
 		this.gameModel = new NMMGameModel();
-		this.gp = new GamePanel(this.gameModel);
+		this.gp = new GamePanel(this.gameModel, this);
 		
 		
 		this.setSize(950, 800);

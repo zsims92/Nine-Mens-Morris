@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
+
 import nmm.model.user.Player;
 public class PlayerPanel extends JPanel{
 
