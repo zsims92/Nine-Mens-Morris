@@ -34,7 +34,7 @@ public class GameBoard extends JPanel implements MouseListener{
 		this.mw = mw;
 		this.p1 = new PlayerPanel(nmm.getPlayer1());
 		this.p2 = new PlayerPanel(nmm.getPlayer2());
-		this.gameModel = new NMMGameModel();
+		this.gameModel = nmm;
 		this.gp = new GamePanel(this.gameModel, this);
 		
 		
@@ -57,11 +57,8 @@ public class GameBoard extends JPanel implements MouseListener{
 		this.setVisible(true);
 	}
 	
-	public void setGameModel(NMMGameModel game){
-		this.gameModel = game;
-	}
 	private void changeWindow(ActionEvent evt) {
-		this.mw.changeCard("StartScreen");			
+		this.mw.changeCard("NewGameScreen");			
 	}
 	
 	@Override

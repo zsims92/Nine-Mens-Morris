@@ -38,26 +38,12 @@ public class Player {
 		this.score = score;
 	}
 	private void setColor(String color){
-		Color c = null;
-		color.toUpperCase();
-		Field field = null;
-		
+		Color c = null;	
 		try {
-			field = Class.forName("java.awt.color").getField(color);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			c = (Color)field.get(null);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+		    Field field = Color.class.getField(color.toLowerCase());
+		    c = (Color)field.get(null);
+		} catch (Exception e) {
+		    color = null; // Not defined
 		}
 		
 		this.color = c;
