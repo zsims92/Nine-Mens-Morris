@@ -2,25 +2,33 @@ package nmm.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import nmm.controller.NMMGameModel;
 import nmm.view.gameBoard.GameBoard;
 import nmm.view.newGame.NewGameScreen;
 
-public class MainWindow extends JFrame implements WindowListener, MouseListener{
+public class MainWindow extends JFrame{
 
 	/**
 	 * 
@@ -50,7 +58,7 @@ public class MainWindow extends JFrame implements WindowListener, MouseListener{
 	private JMenuItem jMenuItem6;
 	
 	public MainWindow(){
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle("Nine Mens Morris");
         this.setSize(600,600);
 
@@ -66,17 +74,11 @@ public class MainWindow extends JFrame implements WindowListener, MouseListener{
 		cardPanel.add(this.ws, "WelcomScreen");
         cards.show(cardPanel, "WelcomScreen");
 	        
-        this.addMouseListener(this);
 		this.add(cardPanel);
 		this.setSize(450, 300);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-	}
-	public void reset(ActionEvent evt){
-		this.changeCard("WelcomScreen");
-		this.setSize(450, 300);
-		this.setLocationRelativeTo(null);
 	}
 	
 	private void createMenuBar() {
@@ -107,6 +109,31 @@ public class MainWindow extends JFrame implements WindowListener, MouseListener{
         		reset(evt);
         	}
         });
+        jMenuItem3.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent evt){
+        		quit(evt);
+        	}
+        });
+        jMenuItem2.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent evt){
+        		cheatMode(evt);
+        	}
+        });
+        jMenuItem4.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent evt){
+        		undo(evt);
+        	}
+        });
+        jMenuItem5.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent evt){
+        		showHowTo(evt);
+        	}
+        });
+        jMenuItem6.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent evt){
+        		showAbout(evt);
+        	}
+        });
         
         jMenu1.add(jMenuItem1);
         jMenu1.add(jMenuItem2);
@@ -121,82 +148,90 @@ public class MainWindow extends JFrame implements WindowListener, MouseListener{
 
         this.setJMenuBar(jMenuBar1);
 	}
+		
+	private void showAbout(ActionEvent evt) {
+		JLabel about = new JLabel();
+		about.setText("<html>Created by:<br>"+"" +
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zachary Sims</br><br>"+
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jerad Gerber</br><br>" +
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Travis Sweetser</br></html>");
+		JOptionPane.showMessageDialog(null, about);
+	}
+
+	private void showHowTo(ActionEvent evt) {
+		JEditorPane editorPane = new JEditorPane();;
+		editorPane.setEditable(false);
+		java.net.URL howToUrl = null;
+		try {
+			howToUrl = new java.net.URL("http://www.themathlab.com/games/Nine%20Man%20Morris/howtoplay.htm");
+		} catch (MalformedURLException e) {
+		}
+		try {
+	        editorPane.setPage(howToUrl);
+	    } catch (IOException e) {
+	        System.err.println("Attempted to read a bad URL: " + howToUrl);
+	    }
+	    JOptionPane.showMessageDialog(null, editorPane);
+    }
+
+	private void undo(ActionEvent evt) {
+		// TODO Auto-generated method stub	
+	}
+
+	private void cheatMode(ActionEvent evt) {
+		// TODO Auto-generated method stub	
+	}
+
+	public void quit(ActionEvent evt) {
+		int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?");
+		if(confirm == 0){
+			this.dispose();
+		}
+		else
+			return;	
+	}
+
 	public void changeCard(String card){
 		this.cards.show(cardPanel, card);
 	}
 	
+	public void reset(ActionEvent evt){
+		if(evt.getSource() == this.jMenuItem1){
+			int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?");
+			if(confirm == 0){
+				this.changeCard("WelcomScreen");
+				this.setSize(450, 300);
+				this.setLocationRelativeTo(null);
+			}
+			else
+				return;
+		}
+		this.changeCard("WelcomScreen");
+		this.setSize(450, 300);
+		this.setLocationRelativeTo(null);
+	}
+	
 	public void newGame(Integer mode){
-		this.nmm = new NMMGameModel(this, mode);
+		this.nmm = new NMMGameModel(mode);
 		this.sd = new NewGameScreen(this, this.nmm, mode);
 		cardPanel.add(this.sd, "NewGameScreen");
 		this.changeCard("NewGameScreen");
-		this.setSize(300,300);
+		this.setSize(350,350);
 	}
 	
 	public void startGame(){
 		this.gb = new GameBoard(nmm, this);
-		this.vs = new VictoryScreen(nmm.getPlayer1(), nmm.getPlayer2());
 		cardPanel.add(this.gb, "GameBoard");
-		cardPanel.add(this.vs, "GameOver");
 		this.changeCard("GameBoard");
 		this.setSize(900,800);
 		this.setLocation(100,20);
 	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
+	
+	public void showEnd() {
+		this.vs = new VictoryScreen(this, this.nmm.getVictor(), this.nmm.getLoser());
+		cardPanel.add(this.vs, "EndGame");
+		this.changeCard("EndGame");
+		this.setLocationRelativeTo(null);
+		this.setSize(350,350);
 	}
 }

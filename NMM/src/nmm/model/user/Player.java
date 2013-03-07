@@ -43,7 +43,7 @@ public class Player {
 		    Field field = Color.class.getField(color.toLowerCase());
 		    c = (Color)field.get(null);
 		} catch (Exception e) {
-		    color = null; // Not defined
+		    c = Color.BLACK; // Not defined
 		}
 		
 		this.color = c;
@@ -64,5 +64,9 @@ public class Player {
 	public Integer getPiecesPlayed() {
 		// TODO Auto-generated method stub
 		return 9;
+	}
+
+	public boolean isHuman() {
+		return true;
 	}
 }

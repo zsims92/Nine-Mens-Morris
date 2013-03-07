@@ -1,15 +1,8 @@
 package nmm.view.newGame;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import nmm.controller.NMMGameModel;
-import nmm.model.user.AIPlayer;
 import nmm.model.user.Player;
 import nmm.view.MainWindow;
 
@@ -44,7 +37,6 @@ public class NewGameScreen extends JPanel{
 	public void startGame(){
 		if(this.mode == 0){
 			this.nmm.setPlayer1(new Player(this.pve.getP1Name(), this.pve.getP1Color()));
-			this.nmm.setPlayer2(new AIPlayer("Joe", "BLACK"));
 			this.mw.startGame();
 		}
 		else if(this.mode == 1){

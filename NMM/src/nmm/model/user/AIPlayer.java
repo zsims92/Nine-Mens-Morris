@@ -6,5 +6,10 @@ public class AIPlayer extends Player {
 		super(name, color);
 		// TODO Auto-generated constructor stub
 	}
+	
+	@Override
+	public boolean isHuman(){
+		return false;
+	}
 
 }

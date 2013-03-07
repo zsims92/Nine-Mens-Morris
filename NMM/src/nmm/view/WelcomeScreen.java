@@ -4,7 +4,11 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class WelcomeScreen extends JComponent{
 	/**
@@ -23,7 +27,7 @@ public class WelcomeScreen extends JComponent{
         pve = new JButton();
         pvp = new JButton();
 
-        welcome.setFont(new Font("Traditional Arabic", 1, 24)); // NOI18N
+        welcome.setFont(new Font("Traditional Arabic", 1, 34));
         welcome.setHorizontalAlignment(SwingConstants.CENTER);
         welcome.setText("Nine Men's Morris");
 
