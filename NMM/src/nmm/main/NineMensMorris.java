@@ -80,7 +80,6 @@ public class NineMensMorris {
 
 	private static boolean PlacementPhase() 
 	{
-		/*
 		String input;
 		String tokens[];
 		int pieceID;
@@ -96,7 +95,8 @@ public class NineMensMorris {
 			return false;
 		}
 		pieceID = Integer.parseInt(tokens[0]);
-		*/
+		
+		/* Code below for testing movement phase. Comment out code above and below to use.
 		gameboard.PlacePiece(player1, 0, "A");
 		gameboard.PlacePiece(player2, 0, "B");
 		gameboard.PlacePiece(player1, 1, "C");
@@ -118,7 +118,8 @@ public class NineMensMorris {
 		nextPlayer();
 
 		
-		return true;//gameboard.PlacePiece(current_player, pieceID, tokens[1]);
+		return true;*/
+		return gameboard.PlacePiece(current_player, pieceID, tokens[1]);
 		
 		
 	}
