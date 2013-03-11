@@ -95,7 +95,7 @@ public class Board {
 		// Make sure piece selection isn't placed already.
 		if (curPiece.getStatus() != GamePiece.UNPLACED)
 		{
-			System.out.println("| Invalid Piece - It is not unplaced.");
+			System.out.println("| Invalid Piece - It is already placed.");
 			return false;
 		}
 		
@@ -113,9 +113,121 @@ public class Board {
 
 	}
 	
-	private ArrayList<Location> AllNeighbors(GamePiece piece)
+	public boolean MovePiece(Player player, int pieceID, String locLabel)
 	{
-		Location loc = GetPieceLocation(piece);
+		GamePiece curPiece = player.getPiece(pieceID);
+		Location curLoc = GetPieceLocation(curPiece);
+		Location newLoc = GetLocationByLabel(locLabel);
+		
+		// Check for invalid input.
+		if (curPiece == null || newLoc == null)
+		{
+			System.out.println("| Invalid piece id or location label.");
+			return false;
+		}
+		
+		// Make sure piece selection is placed already.
+		if (curPiece.getStatus() != GamePiece.PLACED)
+		{
+			System.out.println("| Invalid Piece - It is not placed nor in play.");
+			return false;
+		}
+		// Make sure the locations are neighbors.
+		if (!AreNeighbors(curLoc, newLoc))
+		{
+			System.out.println("| Invalid Location - It is not adjacent.");
+			return false;
+		}
+		
+		// Make sure the location is empty
+		if (!newLoc.ContainsPiece(null))
+		{
+			System.out.println("| Invalid Location - It contains a piece already.");
+			return false;
+		}
+		
+		// We're ok to move the piece.
+		newLoc.setPiece(curPiece);
+		curLoc.setPiece(null);
+		
+		// Check for a created mill.
+		if (IsMill(newLoc))
+		{
+			// We will return false so current player is not nexted.
+			// Set current phase to removal phase.
+			this.SetCurrentPhase(REMOVAL_PHASE);
+			return false;
+		}
+		
+		return true;
+
+	}
+	
+	private boolean IsMill(Location loc)
+	{
+		int vertCount = CountAdjacent(loc, 0);
+		int horizCount = CountAdjacent(loc, 1);
+		
+		if (Math.max(vertCount, horizCount) > 2)
+			return true;
+		else
+			return false;
+	}
+	
+	private int CountAdjacent(Location loc, int dir)
+	{
+		ArrayList<Location> nghbrs = SomeNeighbors(loc, dir);
+		if (nghbrs.size() == 2)
+			return 3;
+		else if (nghbrs.size() == 1)
+		{
+			// See if the neighbor has another adjacent neighbor.
+			if(SomeNeighbors(nghbrs.get(0), dir).size() == 2)
+				return 3;
+			
+			return 2;
+		}
+		return 1;
+		
+	}
+	
+	private boolean AreNeighbors(Location loc1, Location loc2)
+	{
+		ArrayList<Location> all_neighbors = AllNeighbors(loc1);
+		if (all_neighbors.contains(loc2))
+			return true;
+		else
+			return false;
+	}
+	
+	// Returns locations with a defined direction and a owner that
+	// matches the piece in the supplied location.
+	private ArrayList<Location> SomeNeighbors(Location loc, int dir)
+	{
+		ArrayList<Location> NeighborList = new ArrayList<Location>();
+		Edge curEdge;
+		Location oppLoc;
+		
+		// Find all edges that hold this location
+		for (int i=0; i < edge_list.size(); i++)
+		{
+			curEdge = edge_list.get(i);
+			oppLoc = curEdge.GetOpposite(loc);
+			
+			// If the edge has the location, add the adjacent location to the list.
+			// Make sure it matches directional and player owned conditions.
+			if (curEdge.HasLocation(loc) && curEdge.GetAlignment() == dir && oppLoc.getPiece() != null)
+			{
+				if(oppLoc.getPiece().getOwner() == loc.getPiece().getOwner())
+					NeighborList.add(curEdge.GetOpposite(loc));
+			}
+		}
+		
+		return NeighborList;
+	}
+	
+	private ArrayList<Location> AllNeighbors(Location loc)
+	{
 		ArrayList<Location> NeighborList = new ArrayList<Location>();
 		
 		// Find all edges that hold this location

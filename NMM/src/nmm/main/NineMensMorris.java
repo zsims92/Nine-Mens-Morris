@@ -31,7 +31,8 @@ public class NineMensMorris {
     			break;
     			
     		case Board.MOVEMENT_PHASE: //movement
-    			MovementPhase();
+    			if(MovementPhase())
+    				nextPlayer();
     			break;
     			
     		case Board.REMOVAL_PHASE: //removal
@@ -48,20 +49,38 @@ public class NineMensMorris {
     	}
     }
     
-    private static void MovementPhase() 
+    private static boolean MovementPhase() 
     {
+		String input;
+		String tokens[];
+		int pieceID;
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.printf("| [Movement] Player '%s', enter movement location [<PieceID>,<LocLabel>]: ", current_player.getName());
+		input = scanner.nextLine();
+		
+		tokens = input.split(",");
+		if(!isInt(tokens[0]))
+		{
+			System.out.println("| Invalid piece ID - not an integer.");
+			return false;
+		}
+		pieceID = Integer.parseInt(tokens[0]);
+			
+		return gameboard.MovePiece(current_player, pieceID, tokens[1]);
 		
 		
 	}
 
 	private static void RemovalPhase() 
 	{
-		
+		System.out.println("Removal phase! WOOT");
 		
 	}
 
 	private static boolean PlacementPhase() 
 	{
+		/*
 		String input;
 		String tokens[];
 		int pieceID;
@@ -71,17 +90,48 @@ public class NineMensMorris {
 		input = scanner.nextLine();
 		
 		tokens = input.split(",");
-		try 
+		if(!isInt(tokens[0]))
 		{
-			pieceID = Integer.parseInt(tokens[0]);
-		} catch (NumberFormatException nfe) {
 			System.out.println("| Invalid piece ID - not an integer.");
 			return false;
 		}
-			
-		return gameboard.PlacePiece(current_player, pieceID, tokens[1]);
+		pieceID = Integer.parseInt(tokens[0]);
+		*/
+		gameboard.PlacePiece(player1, 0, "A");
+		gameboard.PlacePiece(player2, 0, "B");
+		gameboard.PlacePiece(player1, 1, "C");
+		gameboard.PlacePiece(player2, 1, "D");
+		gameboard.PlacePiece(player1, 2, "E");
+		gameboard.PlacePiece(player2, 2, "F");
+		gameboard.PlacePiece(player1, 3, "G");
+		gameboard.PlacePiece(player2, 3, "H");
+		gameboard.PlacePiece(player1, 4, "I");
+		gameboard.PlacePiece(player2, 4, "J");
+		gameboard.PlacePiece(player1, 5, "K");
+		gameboard.PlacePiece(player2, 5, "L");
+		gameboard.PlacePiece(player1, 6, "M");
+		gameboard.PlacePiece(player2, 6, "N");
+		gameboard.PlacePiece(player1, 7, "O");
+		gameboard.PlacePiece(player2, 7, "P");
+		gameboard.PlacePiece(player1, 8, "Q");
+		gameboard.PlacePiece(player2, 8, "R");
+		nextPlayer();
+
+		
+		return true;//gameboard.PlacePiece(current_player, pieceID, tokens[1]);
 		
 		
+	}
+	
+	private static boolean isInt(String input)
+	{
+		try 
+		{
+			Integer.parseInt(input);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
 	}
 
 	public static void GameSetup()
