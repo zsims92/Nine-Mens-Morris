@@ -25,21 +25,25 @@ public class NineMensMorris {
     		switch(gamephase)
     		{
     		case Board.PLACEMENT_PHASE: //placement
+    			// If placement is successful, move on to next player.
     			if (PlacementPhase())
     				nextPlayer();
     			break;
+    			
     		case Board.MOVEMENT_PHASE: //movement
     			MovementPhase();
     			break;
+    			
     		case Board.REMOVAL_PHASE: //removal
     			RemovalPhase();
     			break;
+    			
     		default:
     			System.out.println("Invalid game phase. Exiting.");
     			System.exit(1);
     			break;
     		}
-    		gameboard.PrintEdges();
+    		//gameboard.PrintEdges();
     		gamephase = gameboard.GetCurrentPhase(current_player);
     	}
     }
@@ -67,7 +71,14 @@ public class NineMensMorris {
 		input = scanner.nextLine();
 		
 		tokens = input.split(",");
-		pieceID = Integer.parseInt(tokens[0]);
+		try 
+		{
+			pieceID = Integer.parseInt(tokens[0]);
+		} catch (NumberFormatException nfe) {
+			System.out.println("| Invalid piece ID - not an integer.");
+			return false;
+		}
+			
 		return gameboard.PlacePiece(current_player, pieceID, tokens[1]);
 		
 		
@@ -115,7 +126,7 @@ public class NineMensMorris {
 	
 	public static void PrintBreak()
 	{
-		System.out.println("+---------------------------------------\n");
+		System.out.println("+---------------------------------------");
 	}
 
 }

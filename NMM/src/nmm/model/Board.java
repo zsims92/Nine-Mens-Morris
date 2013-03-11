@@ -32,7 +32,7 @@ public class Board {
 		this.LoadBoard();
 		
 		this.current_phase = PLACEMENT_PHASE;
-		this.PrintEdges();
+		//this.PrintEdges();
 		
 		//this.boardArray = newBoard();
 		
@@ -85,16 +85,24 @@ public class Board {
 		GamePiece curPiece = player.getPiece(pieceID);
 		Location newLoc = GetLocationByLabel(locLabel);
 		
+		// Check for invalid input.
+		if (curPiece == null || newLoc == null)
+		{
+			System.out.println("| Invalid piece id or location label.");
+			return false;
+		}
+		
+		// Make sure piece selection isn't placed already.
 		if (curPiece.getStatus() != GamePiece.UNPLACED)
 		{
-			System.out.println("Invalid Piece - It is not unplaced.");
+			System.out.println("| Invalid Piece - It is not unplaced.");
 			return false;
 		}
 		
 		// Make sure the location is empty
 		if (!newLoc.ContainsPiece(null))
 		{
-			System.out.println("Invalid Location - It contains a piece already.");
+			System.out.println("| Invalid Location - It contains a piece already.");
 			return false;
 		}
 		
@@ -105,7 +113,7 @@ public class Board {
 
 	}
 	
-	public ArrayList<Location> AllNeighbors(GamePiece piece)
+	private ArrayList<Location> AllNeighbors(GamePiece piece)
 	{
 		Location loc = GetPieceLocation(piece);
 		ArrayList<Location> NeighborList = new ArrayList<Location>();
@@ -163,7 +171,7 @@ public class Board {
 			System.out.println(edge_list.get(i));
 	}
 	
-	public void LoadBoard()
+	private void LoadBoard()
 	{
 		BufferedReader br = null;
 		String curLine = "";
@@ -185,6 +193,8 @@ public class Board {
 				// Split the location elements apart.
 				locations = tokens[1].split(",");
 				
+				// Get the new locations connected by the edge. 
+				// AddLocation will reference current locs if existant already.
 				newLoc1 = AddLocation(locations[0]);
 				newLoc2 = AddLocation(locations[1]);
 				
