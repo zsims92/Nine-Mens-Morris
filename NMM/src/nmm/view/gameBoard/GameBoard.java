@@ -3,16 +3,13 @@ package nmm.view.gameBoard;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
-import nmm.model.NMMGameModel;
-import nmm.model.user.Player;
+import nmm.controller.NMMGameModel;
 import nmm.view.MainWindow;
 
-public class GameBoard extends JPanel implements MouseListener{
+public class GameBoard extends JPanel{
 
 	/**
 	 * 
@@ -20,7 +17,6 @@ public class GameBoard extends JPanel implements MouseListener{
 	private static final long serialVersionUID = 2364448613335062368L;
 	private NMMGameModel gameModel;
 	private MainWindow mw;
-	private JButton but;
 	private PlayerPanel p1;
 	private PlayerPanel p2;
 	private GamePanel gp;
@@ -32,9 +28,8 @@ public class GameBoard extends JPanel implements MouseListener{
 		this.mw = mw;
 		this.p1 = new PlayerPanel(nmm.getPlayer1());
 		this.p2 = new PlayerPanel(nmm.getPlayer2());
-		this.gameModel = new NMMGameModel();
-		this.gp = new GamePanel(this.gameModel);
-		
+		this.gameModel = nmm;
+		this.gp = new GamePanel(this.gameModel, this);
 		
 		this.setSize(950, 800);
 		this.setBackground(Color.BLUE);
@@ -42,62 +37,23 @@ public class GameBoard extends JPanel implements MouseListener{
 		this.add(this.p1, BorderLayout.WEST);
 		this.add(this.gp, BorderLayout.CENTER);
 		this.add(this.p2, BorderLayout.EAST);
-		
-		but = new JButton("This is the game Display");
-		but.setActionCommand("This is the game Display");
-		
-		this.add(but, BorderLayout.NORTH);
+
 		this.setVisible(true);
-	}
-	
-	public void setGameModel(NMMGameModel game){
-		this.gameModel = game;
 	}
 	
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
+		if(this.gameModel.getStatus() == 1){
+			this.mw.showEnd();
+		}
+		
 		this.p1.repaint();
 		this.p2.repaint();
 		this.gp.repaint();
 	}
 	
-	public void setButtonListener(MainWindow mw){
-		this.but.addMouseListener(mw);
-	}	
-	public void setPanelListener(MainWindow mw){
-		this.addMouseListener(mw);
-	}
-	public JButton getButton(){
-		return this.but;
-	}
 	public boolean getStatus(){
 		return this.status;
 	}	
-	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

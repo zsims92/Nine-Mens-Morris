@@ -12,7 +12,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import nmm.model.NMMGameModel;
+import nmm.controller.NMMGameModel;
 
 public class GamePanel extends JPanel implements MouseListener{
 
@@ -25,8 +25,10 @@ public class GamePanel extends JPanel implements MouseListener{
 	private static final int CELL_SIZE = 100;
 	private BufferedImage board;
 	private NMMGameModel gameModel;
+	private GameBoard gb;
 	
-	public GamePanel(NMMGameModel game){
+	public GamePanel(NMMGameModel game, GameBoard gb){
+		this.gb = gb;
 		this.gameModel = game;
 		try {
 			this.board = ImageIO.read(new File("resources\\nmmBoard.png"));
@@ -44,7 +46,7 @@ public class GamePanel extends JPanel implements MouseListener{
 	//This should paint 49 blocks	
 	public void paintComponent(Graphics g) {
         super.paintComponent(g);
-    	int[][] gameBoard = this.gameModel.getBoardArray();
+    	int[][] gameBoard = this.gameModel.getBoard().getBoardArray();
     	drawBackground(g);
         for (int r=0; r<ROWS; r++) {
             for (int c=0; c<COLS; c++) {
@@ -53,14 +55,12 @@ public class GamePanel extends JPanel implements MouseListener{
             	
             	//Represents p1 piece
 				if(gameBoard[r][c] == 1){
-            		g.setColor(Color.RED);
-            		//g.setColor(gameModel.getPlayer1().getColor());
+            		g.setColor(gameModel.getPlayer1().getColor());
             		g.fillOval(x+14, y+14, CELL_SIZE-28, CELL_SIZE-28);
             	}
             	//Represents p2 piece
 				else if(gameBoard[r][c] == 2){
             		g.setColor(gameModel.getPlayer2().getColor());
-            		//g.setColor(gameModel.getPlayer2().getColor());
             		g.fillOval(x+10, y+10, CELL_SIZE-20, CELL_SIZE-20);
 				}
             }
@@ -78,31 +78,10 @@ public class GamePanel extends JPanel implements MouseListener{
         if(row < 0 || col < 0 || row > 6 || col > 6)
         	return;
         
-        this.gameModel.changeColor(row, col);
+        this.gameModel.newMove(row, col);
         
-        /*Logic here to decide if the
-         * location that the piece was clicked
-         * was a piece they wanted to remove,
-         * a piece they wanted to move,
-         * or just a simple click
-         * */
-        
-        
-        //Determine phase of game here
-        //If phase 1 (place phase)
-		
-//        //If piece to move:
-//        // if(gameModel.pi)
-//        //
-//         
-
-        //If phase 2 (game phase)
-        
-        
-        
-        //If phase 3 ()
         this.revalidate();
-        this.repaint();
+        this.gb.repaint();
 	}
 	
 	
