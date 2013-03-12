@@ -362,7 +362,7 @@ public class Board {
 		
 		try 
 		{
-			br = new BufferedReader(new FileReader("board.txt"));
+			br = new BufferedReader(new FileReader("resources\\board.txt"));
 			
 			// Load in each line of the file, creating new edges
 			// and locations as they are found.
