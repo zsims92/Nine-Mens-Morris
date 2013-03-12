@@ -10,6 +10,7 @@ public class GamePiece implements Comparable<GamePiece>
 	private Player owner;
 	private Integer status;
 	private int id;
+	private boolean selected;
 	
 	public static final int UNPLACED = 0;
 	public static final int PLACED = 1;
@@ -26,6 +27,13 @@ public class GamePiece implements Comparable<GamePiece>
 		this.owner = owner;
 		this.status = 0;
 		this.id = id;
+	}
+	
+	public boolean getSelected(){
+		return this.selected;
+	}
+	public void select(boolean select){
+		this.selected = select;
 	}
 	public boolean IsAlive()
 	{

@@ -29,11 +29,11 @@ public class PlayerPanel extends JPanel{
 	public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        Integer pieces = this.player.getPiecesPlayed();
-        for (int r=1; r<pieces; r++) {
+        Integer pieces = 9 - this.player.getPiecesPlayed();
+        for (int r=0; r<pieces; r++) {
             for (int c=0; c<COLS; c++) {
                 int x = c * CELL_SIZE;
-                int y = r * CELL_SIZE;
+                int y = r * CELL_SIZE + 30;
             	g.setColor(Color.WHITE);
             	g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
             	g.setColor(this.player.getColor());

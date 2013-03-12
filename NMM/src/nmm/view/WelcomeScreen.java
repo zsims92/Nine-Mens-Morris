@@ -1,13 +1,15 @@
 package nmm.view;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class WelcomeScreen extends JComponent{
@@ -19,6 +21,8 @@ public class WelcomeScreen extends JComponent{
 	private JLabel welcome;
 	private JButton pve;
 	private JButton pvp;
+	private JPanel top;
+	private JPanel bot;
 	
 	public WelcomeScreen(MainWindow mw){
 		this.mw = mw;
@@ -31,48 +35,48 @@ public class WelcomeScreen extends JComponent{
         welcome.setHorizontalAlignment(SwingConstants.CENTER);
         welcome.setText("Nine Men's Morris");
 
+
+
+        top = new JPanel();
+        welcome = new JLabel();
+        bot = new JPanel();
+        pve = new JButton();
+        pvp = new JButton();
+
+        setLayout(new GridLayout(2, 2));
+
+        top.setLayout(new BorderLayout());
+
+        welcome.setFont(new Font("Tahoma", 0, 80)); // NOI18N
+        welcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        welcome.setText("Nine Men's Morris");
+        top.add(welcome, BorderLayout.CENTER);
+
+        add(top);
+
+        bot.setLayout(new GridLayout());
+
+        pve.setFont(new Font("Traditional Arabic", 0, 48)); // NOI18N
         pve.setText("Plaver VS Computer");
+        bot.add(pve);
+
+        pvp.setFont(new Font("Traditional Arabic", 0, 48)); // NOI18N
+        pvp.setText("Player VS Player");
+
         pve.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent evt){
         		changeWindow(evt);
         	}
         });
-        
-        pvp.setText("Player VS Player");
 		pvp.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent evt){
         		changeWindow(evt);
         	}
         });
+		
+        bot.add(pvp);
 
-        GroupLayout layout = new GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(pve)
-                        .addGap(76, 76, 76)
-                        .addComponent(pvp, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
-                    .addComponent(welcome, GroupLayout.PREFERRED_SIZE, 330, GroupLayout.PREFERRED_SIZE))
-                .addGap(49, 49, 49))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(welcome, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(pve, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pvp, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(61, Short.MAX_VALUE))
-        );
-        
-		this.setSize(100,100);
-		this.setVisible(true);
+        add(bot);
 	}
 	
 	private void changeWindow(ActionEvent evt) {
