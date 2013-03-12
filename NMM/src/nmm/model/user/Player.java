@@ -10,14 +10,14 @@ public class Player {
 	private String name;
 	private Color color;
 	private ArrayList<GamePiece> pieces;
-	private Integer score;
+	//private Integer score;
 	final Integer MAXPIECES = 9;
 	
 	public Player(String name, String color){
 		this.name = name;
 		this.setColor(color);
 		this.initPieces();
-		this.setScore(MAXPIECES);
+		//this.setScore(MAXPIECES);
 	}
 	
 	private void initPieces() {
@@ -36,16 +36,18 @@ public class Player {
 		
 		return null;
 	}
-	
+	/* not neccessary
 	public void addScore(){
 		this.score++;
 	}
 	public void subScore(){
 		this.score--;
 	}
+	
 	public void setScore(Integer score){
 		this.score = score;
 	}
+	*/
 	private void setColor(String color){
 		Color c = null;	
 		try {
@@ -67,7 +69,13 @@ public class Player {
 		return this.pieces;
 	}
 	public Integer getScore() {
-		return this.score;
+		int curscore = 0;
+		
+		for(int i=0; i < pieces.size(); i++)
+			if (pieces.get(i).getStatus() != GamePiece.DEAD)
+				curscore++;
+				
+		return curscore;
 	}
 	
 	public int getPiecesPlayed() {
