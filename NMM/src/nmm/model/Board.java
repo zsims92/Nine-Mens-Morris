@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import javax.swing.JOptionPane;
+
 import nmm.model.user.Player;
+import nmm.view.MainWindow;
 
 public class Board {
 	
@@ -15,6 +18,7 @@ public class Board {
 	private ArrayList<Location> location_list;
 	private ArrayList<Edge> edge_list;
 	private int current_phase;
+	private boolean cheatMode;
 
 	// Game phases
 	public static final int GAMEOVER_PHASE = -1;
@@ -23,13 +27,22 @@ public class Board {
 	public static final int REMOVAL_PHASE = 2;
 	
 	// Number to letter array.
-	public static final char[] ALPHABET = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-
+	public static final char[] ALPHABET = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X'};
+	public static final String[] BOARDREFERENCE = {"0,0","0,3","0,6","1,1","1,3","1,5","2,2","2,3","2,4","3,0","3,1","3,2","3,4","3,5","3,6","4,2","4,3","4,4","5,1","5,3","5,5","6,0","6,3","6,6"};
+	private GamePiece[][] boardArray;
+	private MainWindow mw;
 	
-	// Stuff from Zach's gui
-	private int[][] boardArray;
+	//Copy constructor
+	public Board(Board bd){
+		location_list = bd.location_list;
+		edge_list = bd.edge_list;
+		current_phase = bd.current_phase;
+		boardArray = bd.boardArray;
+		cheatMode = bd.cheatMode;
+		mw = bd.mw;
+	}
 	
-	public Board(){
+	public Board(MainWindow mw){
 		// Load the edge and location list from file
 		location_list = new ArrayList<Location>();
 		edge_list = new ArrayList<Edge>();
@@ -39,10 +52,27 @@ public class Board {
 		Collections.sort(location_list);
 		
 		this.current_phase = PLACEMENT_PHASE;
-		//this.PrintEdges();
-		
-		//this.boardArray = newBoard();
-		
+		this.boardArray = newBoard();
+		this.cheatMode = false;
+		this.mw = mw;
+	}
+	
+	public void updateBoard(){
+		for(int i=0; i<24; i++){
+			String t[] = BOARDREFERENCE[i].split(",");
+			int row = Integer.parseInt(t[0]);
+			int col = Integer.parseInt(t[1]);
+			String label = String.valueOf(ALPHABET[i]);
+			Location loc = this.GetLocationByLabel(label);
+			if(loc.getPiece() != null)
+				this.boardArray[row][col] = loc.getPiece();
+			else
+				this.boardArray[row][col] = new GamePiece(new Player("", "red").getColor(), new Player("", "red"), -1);
+		}
+	}
+	
+	public GamePiece[][] getBoardArray() {
+		return this.boardArray;
 	}
 
 	public int GetCurrentPhase(Player curplayer) {
@@ -51,37 +81,69 @@ public class Board {
 			return PLACEMENT_PHASE;
 
 		// See if phase has been set to REMOVAL
-		else if (current_phase == REMOVAL_PHASE || current_phase == GAMEOVER_PHASE)
+		else if (current_phase == REMOVAL_PHASE || current_phase == GAMEOVER_PHASE){
 			return current_phase;
+		}
 		
 		// Only other option is movement phase.
 		else
 			return MOVEMENT_PHASE;
+	}
+	
+	public void setCheatMode(){
+		this.cheatMode = true;
 	}
 
 	public void SetCurrentPhase(int current_phase) {
 		this.current_phase = current_phase;
 	}
 	
-
-
-	
-	private Edge GetEdgeByLabel(String label)
-	{
-		for(int i = 0; i < edge_list.size(); i++)
-			if (edge_list.get(i).GetLabel().equals(label))
-				return edge_list.get(i);
-				
-		return null;
-	}
-	
-	private Location GetLocationByLabel(String label)
+	public Location GetLocationByLabel(String label)
 	{
 		for(int i = 0; i < location_list.size(); i++)
 			if (location_list.get(i).getLabel().equals(label))
 				return location_list.get(i);
 				
 		return null;
+	}
+	
+	private GamePiece[][] newBoard() {
+		GamePiece[][] bd = new GamePiece[7][7];
+		for(int i=0; i<7; i++)
+			for(int j=0; j<7; j++){
+				Player p = new Player("", "red");
+				bd[i][j] = new GamePiece(p.getColor(), p, -1);
+			}
+		ArrayList<ArrayList<Integer>> notPlaceableSpots = validSpots();
+		int k = 0;
+		for(ArrayList<Integer> i: notPlaceableSpots){
+			for(Integer j: i){
+				bd[k][j] = null;
+			}
+			k++;
+		}
+		
+		return bd;
+	}
+	
+	private ArrayList<ArrayList<Integer>> validSpots() {
+		ArrayList<ArrayList<Integer>> p = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> row0 = new ArrayList<Integer>(Arrays.asList(1,2,4,5));
+		ArrayList<Integer> row1 = new ArrayList<Integer>(Arrays.asList(0,2,4,6));
+		ArrayList<Integer> row2 = new ArrayList<Integer>(Arrays.asList(0,1,5,6));
+		ArrayList<Integer> row3 = new ArrayList<Integer>(Arrays.asList(3));
+		ArrayList<Integer> row4 = new ArrayList<Integer>(Arrays.asList(0,1,5,6));
+		ArrayList<Integer> row5 = new ArrayList<Integer>(Arrays.asList(0,2,4,6));
+		ArrayList<Integer> row6 = new ArrayList<Integer>(Arrays.asList(1,2,4,5));
+		
+		p.add(row0);
+		p.add(row1);
+		p.add(row2);
+		p.add(row3);
+		p.add(row4);
+		p.add(row5);
+		p.add(row6);
+		return p;
 	}
 	
 	/**************************************
@@ -95,21 +157,21 @@ public class Board {
 		// Check for invalid input.
 		if (curPiece == null || newLoc == null)
 		{
-			System.out.println("| Invalid piece id or location label.");
+			JOptionPane.showMessageDialog(this.mw, "Invalid piece id or location label");
 			return false;
 		}
 		
 		// Make sure piece selection isn't placed already.
 		if (curPiece.getStatus() != GamePiece.UNPLACED)
 		{
-			System.out.println("| Invalid Piece - It is already placed.");
+			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is already placed");
 			return false;
 		}
 		
 		// Make sure the location is empty
 		if (!newLoc.ContainsPiece(null))
 		{
-			System.out.println("| Invalid Location - It contains a piece already.");
+			JOptionPane.showMessageDialog(this.mw, "Invalid Location - It contains a piece already");
 			return false;
 		}
 		
@@ -119,7 +181,7 @@ public class Board {
 		return true;
 
 	}
-	
+
 	public boolean MovePiece(Player player, int pieceID, String locLabel)
 	{
 		GamePiece curPiece = player.getPiece(pieceID);
@@ -129,29 +191,30 @@ public class Board {
 		// Check for invalid input.
 		if (curPiece == null || newLoc == null)
 		{
-			System.out.println("| Invalid piece id or location label.");
+			JOptionPane.showMessageDialog(this.mw, "Invalid piece id or location label");
 			return false;
 		}
 		
 		// Make sure piece selection is placed already.
 		if (curPiece.getStatus() != GamePiece.PLACED)
 		{
-			System.out.println("| Invalid Piece - It is not placed nor in play.");
+			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is not placed nor in play");
 			return false;
 		}
 		
+			
 		// Detect if we are in fly mode. If not, make sure we're adjacent.
 		// Make sure the locations are neighbors.
-		if (player.getScore() > 3 && !AreNeighbors(curLoc, newLoc))
+		if (!this.cheatMode && player.getScore() > 3 && !AreNeighbors(curLoc, newLoc))
 		{
-			System.out.println("| Invalid Location - It is not adjacent.");
+			JOptionPane.showMessageDialog(this.mw, "Invalid Location - It is not adjacent");
 			return false;
 		}
 		
 		// Make sure the location is empty
 		if (!newLoc.ContainsPiece(null))
 		{
-			System.out.println("| Invalid Location - It contains a piece already.");
+			JOptionPane.showMessageDialog(this.mw, "Invalid Location - It contains a piece already");
 			return false;
 		}
 		
@@ -164,7 +227,9 @@ public class Board {
 		{
 			// We will return false so current player is not nexted.
 			// Set current phase to removal phase.
-			System.out.printf("| %s has created a mill!\n", player.getName());
+			String s = "%s has created a mill!";
+			s = String.format(s, player.getName());
+			JOptionPane.showMessageDialog(this.mw, s);
 			this.SetCurrentPhase(REMOVAL_PHASE);
 			return false;
 		}
@@ -172,7 +237,7 @@ public class Board {
 		return true;
 
 	}
-	
+
 	public boolean RemovePiece(Player player, int pieceID)
 	{
 		GamePiece curPiece = player.getPiece(pieceID);
@@ -181,14 +246,14 @@ public class Board {
 		// Check for invalid input.
 		if (curPiece == null)
 		{
-			System.out.println("| Invalid Piece ID - Piece not found.");
+			JOptionPane.showMessageDialog(this.mw, "Invalid Piece ID - Piece not found");
 			return false;
 		}
 		
 		// Make sure piece selection is placed already.
 		if (curPiece.getStatus() != GamePiece.PLACED)
 		{
-			System.out.println("| Invalid Piece - It is not placed or alive/in play.");
+			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is not placed or alive/in play");
 			return false;
 		}
 		
@@ -201,10 +266,11 @@ public class Board {
 		// Grab the player's new calculated score.
 		int score = player.getScore();
 		
-		// Print out the player's new score. If player has 3 pieces, print out a message indicating fly mode for that player.
-		System.out.printf("| %s's Score: %d\n", player.getName(), score);
-		if (score == 3)
-			System.out.printf("| %s has engaged fly mode with 3 pieces remaining.\n", player.getName());
+		if (score == 3){
+			String s = "%s has engaged fly mode with 3 pieces remaining";
+			s = String.format(s, player.getName());
+			JOptionPane.showMessageDialog(this.mw, s);
+		}
 		
 		// See if the player has less than 3 pieces remaining, that leads to gameover phase.
 		// if not set the phase to movement phase.
@@ -221,7 +287,6 @@ public class Board {
 		return true;
 
 	}
-	
 	
 	private boolean IsMill(Location loc)
 	{
@@ -346,13 +411,6 @@ public class Board {
 		edge_list.add(newEdge);
 	}
 	
-	
-	public void PrintEdges()
-	{
-		for(int i=0; i < edge_list.size(); i++)
-			System.out.println(edge_list.get(i));
-	}
-	
 	private void LoadBoard()
 	{
 		BufferedReader br = null;
@@ -410,171 +468,5 @@ public class Board {
 		
 		return count;
 	}
-	
-	/*
-	* Prints the board.  This is hard coded for the current board.txt file.
-	* I had to sort the location list in the Board constructor.
-	*/
 
-	public void printBoard()
-	{
-		String player;
-
-		for(int i=0; i<3; i++)
-		{
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player + "\t\t\t");
-		}
-
-		System.out.println();
-		System.out.print("\t");
-
-		for(int i=3; i<6; i++)
-		{
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player+ "\t\t");
-		}
-		
-		System.out.println();
-		System.out.print("\t\t");
-
-		for(int i=6; i<9; i++){
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player + "\t");
-		}
-
-		System.out.println();
-
-		for(int i=9; i<12; i++){
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player + "\t");
-		}
-
-		System.out.print("\t");
-
-		for(int i=12; i<15; i++)
-		{
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player + "\t");
-		}
-
-		System.out.println();
-
-		System.out.print("\t\t");
-
-		for(int i=15; i<18; i++)
-		{
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player + "\t");
-		}
-
-		System.out.println();
-		System.out.print("\t");
-
-		for(int i=18; i<21; i++)
-		{
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player + "\t\t");
-		}
-
-		System.out.println();
-
-		for(int i=21; i<24; i++){
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player + "\t\t\t");
-		}
-
-		System.out.println();
-
-	}
-	/*
-	private int[][] newBoard() {
-		int[][] bd = new int[7][7];
-		for(int i=0; i<7; i++)
-			for(int j=0; j<7; j++){
-				bd[i][j] = 1;
-			}
-		ArrayList<ArrayList<Integer>> placeableSpots = validSpots();
-		int k = 0;
-		for(ArrayList<Integer> i: placeableSpots){
-			for(Integer j: i){
-				bd[k][j] = -1;
-			}
-			k++;
-		}
-		
-		return bd;
-	}
-	private ArrayList<ArrayList<Integer>> validSpots() {
-		ArrayList<ArrayList<Integer>> p = new ArrayList<ArrayList<Integer>>();
-		ArrayList<Integer> row0 = new ArrayList<Integer>(Arrays.asList(1,2,4,5));
-		ArrayList<Integer> row1 = new ArrayList<Integer>(Arrays.asList(0,2,4,6));
-		ArrayList<Integer> row2 = new ArrayList<Integer>(Arrays.asList(0,1,5,6));
-		ArrayList<Integer> row3 = new ArrayList<Integer>(Arrays.asList(3));
-		ArrayList<Integer> row4 = new ArrayList<Integer>(Arrays.asList(0,1,5,6));
-		ArrayList<Integer> row5 = new ArrayList<Integer>(Arrays.asList(0,2,4,6));
-		ArrayList<Integer> row6 = new ArrayList<Integer>(Arrays.asList(1,2,4,5));
-		
-		p.add(row0);
-		p.add(row1);
-		p.add(row2);
-		p.add(row3);
-		p.add(row4);
-		p.add(row5);
-		p.add(row6);
-		return p;
-	}
-	
-	public int[][] getBoardArray() {
-		return this.boardArray;
-	}
-*/
 }

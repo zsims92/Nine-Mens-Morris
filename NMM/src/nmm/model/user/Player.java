@@ -36,18 +36,6 @@ public class Player {
 		
 		return null;
 	}
-	/* not neccessary
-	public void addScore(){
-		this.score++;
-	}
-	public void subScore(){
-		this.score--;
-	}
-	
-	public void setScore(Integer score){
-		this.score = score;
-	}
-	*/
 	private void setColor(String color){
 		Color c = null;	
 		try {
