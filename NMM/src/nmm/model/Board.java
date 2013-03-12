@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import nmm.model.user.Player;
 
@@ -20,6 +21,9 @@ public class Board {
 	public static final int PLACEMENT_PHASE = 0;
 	public static final int MOVEMENT_PHASE = 1;
 	public static final int REMOVAL_PHASE = 2;
+	
+	// Number to letter array.
+	public static final char[] ALPHABET = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 
 	
 	// Stuff from Zach's gui
@@ -30,6 +34,9 @@ public class Board {
 		location_list = new ArrayList<Location>();
 		edge_list = new ArrayList<Edge>();
 		this.LoadBoard();
+		
+		// Sort the location list for printing the visual.
+		Collections.sort(location_list);
 		
 		this.current_phase = PLACEMENT_PHASE;
 		//this.PrintEdges();
@@ -44,7 +51,7 @@ public class Board {
 			return PLACEMENT_PHASE;
 
 		// See if phase has been set to REMOVAL
-		else if (current_phase == REMOVAL_PHASE)
+		else if (current_phase == REMOVAL_PHASE || current_phase == GAMEOVER_PHASE)
 			return current_phase;
 		
 		// Only other option is movement phase.
@@ -132,8 +139,10 @@ public class Board {
 			System.out.println("| Invalid Piece - It is not placed nor in play.");
 			return false;
 		}
+		
+		// Detect if we are in fly mode. If not, make sure we're adjacent.
 		// Make sure the locations are neighbors.
-		if (!AreNeighbors(curLoc, newLoc))
+		if (player.getScore() > 3 && !AreNeighbors(curLoc, newLoc))
 		{
 			System.out.println("| Invalid Location - It is not adjacent.");
 			return false;
@@ -155,6 +164,7 @@ public class Board {
 		{
 			// We will return false so current player is not nexted.
 			// Set current phase to removal phase.
+			System.out.printf("| %s has created a mill!\n", player.getName());
 			this.SetCurrentPhase(REMOVAL_PHASE);
 			return false;
 		}
@@ -162,6 +172,56 @@ public class Board {
 		return true;
 
 	}
+	
+	public boolean RemovePiece(Player player, int pieceID)
+	{
+		GamePiece curPiece = player.getPiece(pieceID);
+		Location curLoc = GetPieceLocation(curPiece);
+		
+		// Check for invalid input.
+		if (curPiece == null)
+		{
+			System.out.println("| Invalid Piece ID - Piece not found.");
+			return false;
+		}
+		
+		// Make sure piece selection is placed already.
+		if (curPiece.getStatus() != GamePiece.PLACED)
+		{
+			System.out.println("| Invalid Piece - It is not placed or alive/in play.");
+			return false;
+		}
+		
+		
+		// We're ok to remove the piece. Change to movement phase.
+		curLoc.setPiece(null);
+		curPiece.setStatus(GamePiece.DEAD);
+		
+		
+		// Grab the player's new calculated score.
+		int score = player.getScore();
+		
+		// Print out the player's new score. If player has 3 pieces, print out a message indicating fly mode for that player.
+		System.out.printf("| %s's Score: %d\n", player.getName(), score);
+		if (score == 3)
+			System.out.printf("| %s has engaged fly mode with 3 pieces remaining.\n", player.getName());
+		
+		// See if the player has less than 3 pieces remaining, that leads to gameover phase.
+		// if not set the phase to movement phase.
+		if(score < 3)
+		{
+			SetCurrentPhase(GAMEOVER_PHASE);
+			// We will return false so we crown the correct victor 
+			// We would stay on this player otherwise, because this method was
+			// passed the opposite player of the current player to remove his piece.
+			return false;
+		} else
+			SetCurrentPhase(MOVEMENT_PHASE);
+		
+		return true;
+
+	}
+	
 	
 	private boolean IsMill(Location loc)
 	{
@@ -176,13 +236,15 @@ public class Board {
 	
 	private int CountAdjacent(Location loc, int dir)
 	{
-		ArrayList<Location> nghbrs = SomeNeighbors(loc, dir);
+		Player owner = loc.getPiece().getOwner();
+		
+		ArrayList<Location> nghbrs = SomeNeighbors(loc, dir, owner);
 		if (nghbrs.size() == 2)
 			return 3;
 		else if (nghbrs.size() == 1)
 		{
 			// See if the neighbor has another adjacent neighbor.
-			if(SomeNeighbors(nghbrs.get(0), dir).size() == 2)
+			if(SomeNeighbors(nghbrs.get(0), dir, owner).size() == 2)
 				return 3;
 			
 			return 2;
@@ -200,9 +262,11 @@ public class Board {
 			return false;
 	}
 	
-	// Returns locations with a defined direction and a owner that
-	// matches the piece in the supplied location.
-	private ArrayList<Location> SomeNeighbors(Location loc, int dir)
+	/*
+	 *  Returns locations with a defined direction and a owner that
+	 *  are neighbors to the supplied location.
+	 */
+	private ArrayList<Location> SomeNeighbors(Location loc, int dir, Player owner)
 	{
 		ArrayList<Location> NeighborList = new ArrayList<Location>();
 		Edge curEdge;
@@ -216,10 +280,16 @@ public class Board {
 			
 			// If the edge has the location, add the adjacent location to the list.
 			// Make sure it matches directional and player owned conditions.
-			if (curEdge.HasLocation(loc) && curEdge.GetAlignment() == dir && oppLoc.getPiece() != null)
+			if (curEdge.HasLocation(loc) && curEdge.GetAlignment() == dir)
 			{
-				if(oppLoc.getPiece().getOwner() == loc.getPiece().getOwner())
+				// If we want the owner to be null (aka no piece located there),
+				// add the location if it holds no piece.
+				if(owner == null && oppLoc.getPiece() == null)
 					NeighborList.add(curEdge.GetOpposite(loc));
+				// We want there to be a piece in the location owned by a particular owner.
+				else if(oppLoc.getPiece() != null && oppLoc.getPiece().getOwner() == owner)
+					NeighborList.add(curEdge.GetOpposite(loc));
+					
 			}
 		}
 		
@@ -318,7 +388,153 @@ public class Board {
 		}
 	}
 
+	/*
+	 * Count the number of available moves a player has.
+	 */
+	public int numMovesAvailable(Player player)
+	{
+		Location curloc;
+		int count = 0;
+		
+		for(int i=0; i < player.getPieces().size(); i++)
+		{
+			curloc = GetPieceLocation(player.getPiece(i));
+			// Is this piece in a gameboard location?
+			if (curloc != null)
+			{
+				// Add to count the amount of neighbors that hold no pieces (null owner)
+				count += SomeNeighbors(curloc, 0, null).size();
+				count += SomeNeighbors(curloc, 1, null).size();
+			}
+		}
+		
+		return count;
+	}
 	
+	/*
+	* Prints the board.  This is hard coded for the current board.txt file.
+	* I had to sort the location list in the Board constructor.
+	*/
+
+	public void printBoard()
+	{
+		String player;
+
+		for(int i=0; i<3; i++)
+		{
+			if(location_list.get(i).getPiece() == null){
+				player = "  ";
+			}else{
+				player = location_list.get(i).getPiece().getOwner().getName();
+				player = player + location_list.get(i).getPiece().getID();
+			}
+			player = location_list.get(i).getLabel() + "[" + player + "]";
+			System.out.print(player + "\t\t\t");
+		}
+
+		System.out.println();
+		System.out.print("\t");
+
+		for(int i=3; i<6; i++)
+		{
+			if(location_list.get(i).getPiece() == null){
+				player = "  ";
+			}else{
+				player = location_list.get(i).getPiece().getOwner().getName();
+				player = player + location_list.get(i).getPiece().getID();
+			}
+			player = location_list.get(i).getLabel() + "[" + player + "]";
+			System.out.print(player+ "\t\t");
+		}
+		
+		System.out.println();
+		System.out.print("\t\t");
+
+		for(int i=6; i<9; i++){
+			if(location_list.get(i).getPiece() == null){
+				player = "  ";
+			}else{
+				player = location_list.get(i).getPiece().getOwner().getName();
+				player = player + location_list.get(i).getPiece().getID();
+			}
+			player = location_list.get(i).getLabel() + "[" + player + "]";
+			System.out.print(player + "\t");
+		}
+
+		System.out.println();
+
+		for(int i=9; i<12; i++){
+			if(location_list.get(i).getPiece() == null){
+				player = "  ";
+			}else{
+				player = location_list.get(i).getPiece().getOwner().getName();
+				player = player + location_list.get(i).getPiece().getID();
+			}
+			player = location_list.get(i).getLabel() + "[" + player + "]";
+			System.out.print(player + "\t");
+		}
+
+		System.out.print("\t");
+
+		for(int i=12; i<15; i++)
+		{
+			if(location_list.get(i).getPiece() == null){
+				player = "  ";
+			}else{
+				player = location_list.get(i).getPiece().getOwner().getName();
+				player = player + location_list.get(i).getPiece().getID();
+			}
+			player = location_list.get(i).getLabel() + "[" + player + "]";
+			System.out.print(player + "\t");
+		}
+
+		System.out.println();
+
+		System.out.print("\t\t");
+
+		for(int i=15; i<18; i++)
+		{
+			if(location_list.get(i).getPiece() == null){
+				player = "  ";
+			}else{
+				player = location_list.get(i).getPiece().getOwner().getName();
+				player = player + location_list.get(i).getPiece().getID();
+			}
+			player = location_list.get(i).getLabel() + "[" + player + "]";
+			System.out.print(player + "\t");
+		}
+
+		System.out.println();
+		System.out.print("\t");
+
+		for(int i=18; i<21; i++)
+		{
+			if(location_list.get(i).getPiece() == null){
+				player = "  ";
+			}else{
+				player = location_list.get(i).getPiece().getOwner().getName();
+				player = player + location_list.get(i).getPiece().getID();
+			}
+			player = location_list.get(i).getLabel() + "[" + player + "]";
+			System.out.print(player + "\t\t");
+		}
+
+		System.out.println();
+
+		for(int i=21; i<24; i++){
+			if(location_list.get(i).getPiece() == null){
+				player = "  ";
+			}else{
+				player = location_list.get(i).getPiece().getOwner().getName();
+				player = player + location_list.get(i).getPiece().getID();
+			}
+			player = location_list.get(i).getLabel() + "[" + player + "]";
+			System.out.print(player + "\t\t\t");
+		}
+
+		System.out.println();
+
+	}
 	/*
 	private int[][] newBoard() {
 		int[][] bd = new int[7][7];

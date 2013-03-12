@@ -50,10 +50,7 @@ public class GamePiece implements Comparable<GamePiece>
 	@Override
 	public int compareTo(GamePiece otherPiece) 
 	{
-		if (this == otherPiece)
-			return 0;
-		else
-			return -1;
+		return this.id - otherPiece.getID();
 	}
 
 	public int getID() {
