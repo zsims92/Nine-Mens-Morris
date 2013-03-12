@@ -23,9 +23,18 @@ public class Player {
 	private void initPieces() {
 		this.pieces = new ArrayList<GamePiece>(MAXPIECES);
 		for(Integer i=0; i<MAXPIECES; i++){			
-			GamePiece p = new GamePiece(this.color, this);
+			GamePiece p = new GamePiece(this.color, this, i);
 			this.pieces.add(p);
 		}
+	}
+	
+	public GamePiece getPiece(int id)
+	{
+		for(int i=0; i < pieces.size(); i++)
+			if (pieces.get(i).getID() == id)
+				return pieces.get(i);
+		
+		return null;
 	}
 	
 	public void addScore(){
@@ -61,9 +70,15 @@ public class Player {
 		return this.score;
 	}
 	
-	public Integer getPiecesPlayed() {
-		// TODO Auto-generated method stub
-		return 9;
+	public int getPiecesPlayed() {
+		int played = 0;
+		for (int i=0; i < pieces.size(); i++)
+		{
+			if (pieces.get(i).getStatus() != GamePiece.UNPLACED)
+				played++;
+		}
+		
+		return played;
 	}
 
 	public boolean isHuman() {
