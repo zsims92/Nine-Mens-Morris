@@ -14,7 +14,8 @@ import javax.swing.SwingConstants;
 
 public class WelcomeScreen extends JComponent{
 	/**
-	 * 
+	 * Welcome screen for
+	 * nine-mens-morris
 	 */
 	private static final long serialVersionUID = 5219597153026471980L;
 	private MainWindow mw;
@@ -24,6 +25,13 @@ public class WelcomeScreen extends JComponent{
 	private JPanel top;
 	private JPanel bot;
 	
+	/***
+	 * Constructor for the welcome
+	 * screen
+	 * 
+	 * Lets the player decide what type of game to play
+	 * @param mw
+	 */
 	public WelcomeScreen(MainWindow mw){
 		this.mw = mw;
 
@@ -79,6 +87,11 @@ public class WelcomeScreen extends JComponent{
         add(bot);
 	}
 	
+	/**
+	 * Will start a new game depending
+	 * on the button that was clicked
+	 * @param evt
+	 */
 	private void changeWindow(ActionEvent evt) {
 		if((JButton)evt.getSource() == this.pve)
 			this.mw.newGame(0);

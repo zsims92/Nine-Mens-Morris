@@ -12,14 +12,28 @@ import nmm.model.user.Player;
 public class VictoryScreen extends JComponent{
 
 	/**
-	 * 
+	 * Victory Screen for
+	 * nine-mens-morris
 	 */
 	private static final long serialVersionUID = 4655939260856856256L;
     private JButton pAgainBut;
     private JButton quitBut;
     private MainWindow mw;
     
+    /***
+     * Default constructor for the
+     * victory screen
+     * 
+     * Shows the winners name and the losers
+     * name along with a short message
+     * 
+     * Has buttons to play again or quit
+     * @param mw
+     * @param victor
+     * @param loser
+     */
 	public VictoryScreen(MainWindow mw, Player victor, Player loser) {
+		this.mw = mw;
         JPanel winnerPanel = new JPanel();
         JLabel winnerText = new JLabel();
         JPanel loserPanel = new JPanel();
@@ -77,12 +91,19 @@ public class VictoryScreen extends JComponent{
         
 	}
 
+	/**
+	 * Ends the program
+	 * @param evt
+	 */
 	private void end(ActionEvent evt) {
 		this.mw.quit(evt);		
 	}
 
+	/**
+	 * Starts a new game
+	 * @param evt
+	 */
 	private void newGame(ActionEvent evt) {
 		this.mw.reset(evt);
-		
 	}
 }

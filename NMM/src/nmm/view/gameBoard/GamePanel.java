@@ -19,7 +19,8 @@ import nmm.model.GamePiece;
 public class GamePanel extends JPanel implements MouseListener{
 
 	/**
-	 * 
+	 * Game Board display
+	 * for nine-mens-morris
 	 */
 	private static final long serialVersionUID = 9076559530700021419L;
 	private static final int ROWS = 7;
@@ -29,6 +30,18 @@ public class GamePanel extends JPanel implements MouseListener{
 	private NMMGameModel gameModel;
 	private GameBoard gb;
 	
+	/***
+	 * Constructor for gamePanel
+	 * 
+	 * Creates the objects that will 
+	 * need to be painted of the screen
+	 * to resemble the board
+	 * 
+	 * Uses the gameModel to determine what the
+	 * board looks like
+	 * @param game
+	 * @param gb
+	 */
 	public GamePanel(NMMGameModel game, GameBoard gb){
 		this.gb = gb;
 		this.gameModel = game;
@@ -44,7 +57,13 @@ public class GamePanel extends JPanel implements MouseListener{
          this.addMouseListener(this);
 	}	
 	
-	//This should paint 49 blocks	
+	/**
+	 * This function will first display
+	 * the background image of the board
+	 * 
+	 * Then it will load the state of the gameboard
+	 * and print onto their the players pieces
+	 */
 	public void paintComponent(Graphics g) {
         super.paintComponent(g);
         GamePiece[][] gameBoard = this.gameModel.getBoard().getBoardArray();
@@ -62,7 +81,10 @@ public class GamePanel extends JPanel implements MouseListener{
 				else if(gameBoard[r][c].getSelected()){
             		g.setColor(gameBoard[r][c].getColor());
             		g.fillOval(x+10, y+10, CELL_SIZE-20, CELL_SIZE-20);
-            		g.setColor(Color.WHITE);
+            		if(gameBoard[r][c].getColor() == Color.WHITE)
+            			g.setColor(Color.BLACK);
+            		else
+            			g.setColor(Color.WHITE);
             		g.fillOval(x+30, y+30, CELL_SIZE-60, CELL_SIZE-60);
 				}
 				else{
@@ -73,11 +95,25 @@ public class GamePanel extends JPanel implements MouseListener{
         }
 	}
 
+	/**
+	 * This function draws the board image
+	 * on the screen in the background
+	 * @param g
+	 */
 	private void drawBackground(Graphics g) {
 		g.drawImage(board, 25, 25, 725, 725, 0, 0, 700, 700, null);
 	}
 
 	@Override
+	/***
+	 * If a mouse is clicked determine
+	 * the location that was clicked
+	 * 
+	 * If invalid return and wait
+	 * for a valid click
+	 * 
+	 * Else determine if valed spot
+	 */
 	public void mouseClicked(MouseEvent e) {
 		int col = e.getX()/CELL_SIZE;
         int row = e.getY()/CELL_SIZE;
@@ -91,7 +127,18 @@ public class GamePanel extends JPanel implements MouseListener{
         this.gb.repaint();
 	}
 	
-	//Converts the given row and col into its correct location label
+	/***
+	 * Given the row and col, convert
+	 * them to a label that is a location
+	 * 
+	 * If invalid return false
+	 * if not possible move return false
+	 * 
+	 * else return true
+	 * @param row
+	 * @param col
+	 * @return
+	 */
 	private boolean convertToLabel(int row, int col) {
 		char[] labels =Board.ALPHABET;
 		String[] points = Board.BOARDREFERENCE;

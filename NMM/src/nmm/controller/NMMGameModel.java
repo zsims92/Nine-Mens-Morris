@@ -4,6 +4,7 @@ import nmm.model.Board;
 import nmm.model.GamePiece;
 import nmm.model.Location;
 import nmm.model.user.Player;
+
 import nmm.view.MainWindow;
 
 public class NMMGameModel {
@@ -17,6 +18,21 @@ public class NMMGameModel {
 	private Integer gameMode = -1;
 	private GamePiece pieceSelected;
 	
+	/**
+	 * Constructor for the GameModel
+	 * Takes in a mode, two players, and
+	 * a mainWindow
+	 * 
+	 * The players are created by the gui
+	 * the mode will be to determine if AI
+	 * is present
+	 * 
+	 * Mw is brought simply to pass to Board
+	 * @param mode
+	 * @param p1
+	 * @param p2
+	 * @param mw
+	 */
 	public NMMGameModel(Integer mode, Player p1, Player p2, MainWindow mw){
 		this.gameMode = mode;
 		this.oldBoard = new Board(mw);
@@ -33,15 +49,38 @@ public class NMMGameModel {
 		this.Loser = p2;
 	}
 	
-	
+	/***
+	 * Will return the status of the board
+	 * 
+	 * Used by the gui
+	 * @return
+	 */
 	public int getStatus(){
 		return this.currBoard.GetCurrentPhase(this.curPlayer);
 	}
 	
+	/***
+	 * This function will restore
+	 * the board to its previous state
+	 * 
+	 * Currently not working
+	 */
 	public void undoMove(){
+		//TODO: implement this
 		this.currBoard = new Board(this.oldBoard);
 	}
 	
+	/***
+	 * The main function of the GameModel
+	 * 
+	 * This will check what phase the game is in
+	 * and determine the correct action from there on out
+	 * 
+	 * Will return false if an errors occur
+	 * Will update the status of the board
+	 * @param label
+	 * @return
+	 */
 	public boolean newMove(String label) {
 		int gamephase = this.currBoard.GetCurrentPhase(this.curPlayer);
 		
@@ -108,7 +147,15 @@ public class NMMGameModel {
 	}
 	
 
-	
+	/***
+	 * Will select the current piece and update its 
+	 * status
+	 * 
+	 * Used for the GUI to select a piece
+	 * and then move that piece
+	 * @param label
+	 * @return
+	 */
  	private boolean selectPiece(String label) {
 		Location t = this.currBoard.GetLocationByLabel(label);
 		if(t.getPiece() == null || t.getPiece().getOwner() != this.curPlayer)
@@ -118,16 +165,40 @@ public class NMMGameModel {
 		return true;
 	}
 
+ 	/***
+	 * Will determine the location and piece to
+	 * remove given the label
+	 * 
+	 * Will then attempt to remove that piece
+ 	 * @param label
+ 	 * @return
+ 	 */
 	private boolean RemovalPhase(String label) {
 		Location t = this.currBoard.GetLocationByLabel(label);
 		return this.currBoard.RemovePiece(this.inactivePlayer(), t.getPiece().getID());
 	}
 	
+	/***
+	 * Will determine the location and piece to
+	 * place given the label
+	 * 
+	 * Will then attempt to place that piece
+	 * @param label
+	 * @return
+	 */
 	private boolean PlacementPhase(String label) {
 		Location t = this.currBoard.GetLocationByLabel(label);
 		return this.currBoard.PlacePiece(this.curPlayer, 8-this.curPlayer.getPiecesPlayed(), t.getLabel());
 	}
 	
+	/***
+	 * Will determine the location and piece to move
+	 * from the given label
+	 * 
+	 * Will then attempt to move that piece
+	 * @param label
+	 * @return
+	 */
     private boolean MovementPhase(String label){
 
 		if (this.currBoard.numMovesAvailable(this.curPlayer) == 0 && this.curPlayer.getScore() > 3){
@@ -137,52 +208,124 @@ public class NMMGameModel {
 		return this.currBoard.MovePiece(this.curPlayer, pieceSelected.getID(), t.getLabel());
 	}
 	
-	//Functions below here need comments added, and are complete otherwise
-	public Player getVictor() {
+	/***
+	 * Will return the winner of the game
+	 * Used in the gui victory screen
+	 * @return
+	 */
+    public Player getVictor() {
 		return this.Victor;
 	}
+	
+	/***
+	 * Will return the loser of the game
+	 * Used in the gui victory screen
+	 * @return
+	 */
 	public Player getLoser() {
 		return this.Loser;
 	}
+	
+	/**
+	 * Will set the next player
+	 */
 	private void nextPlayer(){
 		this.curPlayer = inactivePlayer();
-	}	
+	}
+	
+	/**
+	 * Will return the inactive player
+	 * @return
+	 */
 	private Player inactivePlayer(){
 		if (this.curPlayer  == this.p1)
 			return this.p2;
 		else
 			return this.p1;
 	}
+	
+	/***
+	 * Will return the current Player
+	 * @return
+	 */
 	public Player getCurrPlayer() {
 		return this.curPlayer;
 	}
+	
+	/**
+	 * Will set the CurrentPhase
+	 * to the passed in mode
+	 * @param mode
+	 */
 	public void setGamePhase(Integer mode){
 		this.currBoard.SetCurrentPhase(mode);
 	}
+	
+	/**
+	 * Get the gameMode
+	 * Currently unused
+	 * Will be used for pve game mode
+	 * when it is added
+	 * @return
+	 */
 	public Integer getMode(){
 		return this.gameMode;
 	}	
+	
+	/***
+	 * Return player 1
+	 * @return
+	 */
 	public Player getPlayer1() {
 		return p1;
 	}
+	
+	/***
+	 * Return player 2
+	 * @return
+	 */
 	public Player getPlayer2() {
 		return p2;
 	}
+	
+	/***
+	 * Return the currentBoard being used
+	 * @return
+	 */
 	public Board getBoard() {
 		return this.currBoard;
 	}
+	
+	/**
+	 * Set p1 to the passed in player
+	 * @param p
+	 */
 	public void setPlayer1(Player p) {
 		this.p1 = p;
 	}
+	
+	/***
+	 * Set p2 to the passed in player
+	 * @param p
+	 */
 	public void setPlayer2(Player p) {
 		this.p2 = p;
 	}
+	
+	/***
+	 * This function will return a message
+	 * based on the current phase of the game
+	 * 
+	 * Used in the GUI for displaying what
+	 * to do at the top of the screen
+	 * @return
+	 */
 	public String getPhaseText() {
-		if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == 0)
+		if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.PLACEMENT_PHASE)
 			return "place a piece on the board";
-		else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == 1)
-			return "move on of your pieces on the board";
-		else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == 2)
+		else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.MOVEMENT_PHASE)
+			return "move one of your pieces on the board";
+		else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.REMOVAL_PHASE)
 			return "remove one of your opponents pieces";
 		return "";
 	}

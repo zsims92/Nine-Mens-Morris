@@ -14,7 +14,8 @@ import nmm.view.MainWindow;
 public class GameBoard extends JPanel{
 
 	/**
-	 * 
+	 * GameBoard display
+	 * for nine-mens-morris
 	 */
 	private static final long serialVersionUID = 2364448613335062368L;
 	private NMMGameModel gameModel;
@@ -30,6 +31,16 @@ public class GameBoard extends JPanel{
 	private JPanel topPanel;
 	private JPanel scorePanel;
 	
+	/***
+	 * The constructor for the GameBoard
+	 * The gamemodel is used by itself and
+	 * the player panels and gameBoard
+	 * 
+	 * The Mainwindow is passed to change
+	 * to victory screen when game is over	
+	 * @param nmm
+	 * @param mw
+	 */
 	public GameBoard(NMMGameModel nmm, MainWindow mw){
 		this.gameModel = nmm;
 		this.mw = mw;
@@ -81,6 +92,15 @@ public class GameBoard extends JPanel{
 	}
 	
 	@Override
+	/***
+	 * This function will first check if
+	 * the game is over, and if so
+	 * move on the the victory screen
+	 * 
+	 * It will then update itself, the
+	 * player panels, and the gameBoard
+	 * display
+	 */
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		if(this.gameModel.getStatus() == Board.GAMEOVER_PHASE){
@@ -88,12 +108,10 @@ public class GameBoard extends JPanel{
 		}
 		
 		this.currentPlayer.setText(this.gameModel.getCurrPlayer().getName() + ", " + this.gameModel.getPhaseText());
+
 		this.p1Score.setText("Score: " + String.valueOf(this.gameModel.getPlayer1().getScore()));
-		this.p2Score.setText("Score: " + String.valueOf(this.gameModel.getPlayer1().getScore()));
+		this.p2Score.setText("Score: " + String.valueOf(this.gameModel.getPlayer2().getScore()));
 		
-		this.p1.repaint();
-		this.p2.repaint();
-		this.gp.repaint();
 		this.p1.repaint();
 		this.p2.repaint();
 		this.gp.repaint();

@@ -17,6 +17,8 @@ public class Board {
 	// Class variables
 	private ArrayList<Location> location_list;
 	private ArrayList<Edge> edge_list;
+	private GamePiece[][] boardArray;
+	private MainWindow mw;
 	private int current_phase;
 	private boolean cheatMode;
 
@@ -29,11 +31,19 @@ public class Board {
 	// Number to letter array.
 	public static final char[] ALPHABET = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X'};
 	public static final String[] BOARDREFERENCE = {"0,0","0,3","0,6","1,1","1,3","1,5","2,2","2,3","2,4","3,0","3,1","3,2","3,4","3,5","3,6","4,2","4,3","4,4","5,1","5,3","5,5","6,0","6,3","6,6"};
-	private GamePiece[][] boardArray;
-	private MainWindow mw;
 	
-	//Copy constructor
+	/***
+	 * This is a copy constructor
+	 * which should return make
+	 * a copy of the passed in Board
+	 * object
+	 * 
+	 * Needs fixed as equalizing the
+	 * lists does not change the reference
+	 * @param bd
+	 */
 	public Board(Board bd){
+		//TODO:	Fix this to copy correctly
 		location_list = bd.location_list;
 		edge_list = bd.edge_list;
 		current_phase = bd.current_phase;
@@ -42,6 +52,13 @@ public class Board {
 		mw = bd.mw;
 	}
 	
+	/***
+	 * The normal constructor for the
+	 * Board class.  The MainWindow param
+	 * is used to send updates to the user
+	 * from inside this class
+	 * @param mw
+	 */
 	public Board(MainWindow mw){
 		// Load the edge and location list from file
 		location_list = new ArrayList<Location>();
@@ -57,6 +74,13 @@ public class Board {
 		this.mw = mw;
 	}
 	
+	/***
+	 * This function will update the board
+	 * with the current pieces on it
+	 * 
+	 * As long as they are not null it will
+	 * update with the current locations piece
+	 */
 	public void updateBoard(){
 		for(int i=0; i<24; i++){
 			String t[] = BOARDREFERENCE[i].split(",");
@@ -66,15 +90,31 @@ public class Board {
 			Location loc = this.GetLocationByLabel(label);
 			if(loc.getPiece() != null)
 				this.boardArray[row][col] = loc.getPiece();
-			else
-				this.boardArray[row][col] = new GamePiece(new Player("", "red").getColor(), new Player("", "red"), -1);
+//			else
+//				this.boardArray[row][col] = new GamePiece(new Player("", "red").getColor(), new Player("", "red"), -1);
 		}
 	}
 	
+	/***
+	 * Will return the current 
+	 * state of the board Array
+	 * @return
+	 */
 	public GamePiece[][] getBoardArray() {
 		return this.boardArray;
 	}
+	
 
+	/***
+	 * This function will determine the 
+	 * current phase of the game
+	 * 
+	 * If it is still in placement, removal,
+	 * endGame of simply currentPhase
+	 *
+	 * @param curplayer
+	 * @return
+	 */
 	public int GetCurrentPhase(Player curplayer) {
 		// See if there are pieces yet to be placed.
 		if (curplayer.getPiecesPlayed() < 9)
@@ -90,14 +130,30 @@ public class Board {
 			return MOVEMENT_PHASE;
 	}
 	
+	
+	/***
+	 * This function will turn on
+	 * cheat mode for the users
+	 */
 	public void setCheatMode(){
 		this.cheatMode = true;
 	}
-
+	
+	/***
+	 * This function will set the phase
+	 * of the game to the passed in phase
+	 * @param current_phase
+	 */
 	public void SetCurrentPhase(int current_phase) {
 		this.current_phase = current_phase;
 	}
 	
+	/***
+	 * This function will return a location
+	 * object with the given label
+	 * @param label
+	 * @return
+	 */
 	public Location GetLocationByLabel(String label)
 	{
 		for(int i = 0; i < location_list.size(); i++)
@@ -107,7 +163,19 @@ public class Board {
 		return null;
 	}
 	
+	/***
+	 * This method created an initial board for
+	 * the GUI to use.  The place-able Pieces are
+	 * initialized to a new piece with an ID of
+	 * -1 so they are not drawn on the board.
+	 * 
+	 * Invalid places on the board (along the lines
+	 * in empty spaces) are set to null
+	 * @return
+	 */
 	private GamePiece[][] newBoard() {
+		
+		
 		GamePiece[][] bd = new GamePiece[7][7];
 		for(int i=0; i<7; i++)
 			for(int j=0; j<7; j++){
@@ -126,6 +194,14 @@ public class Board {
 		return bd;
 	}
 	
+	/***
+	 * This is a hard coded function to set
+	 * the invalid spots of the game Board.
+	 * 
+	 * The spots correlate to lines on the board
+	 * and empty spots where a place can not be placed
+	 * @return
+	 */
 	private ArrayList<ArrayList<Integer>> validSpots() {
 		ArrayList<ArrayList<Integer>> p = new ArrayList<ArrayList<Integer>>();
 		ArrayList<Integer> row0 = new ArrayList<Integer>(Arrays.asList(1,2,4,5));
@@ -149,29 +225,28 @@ public class Board {
 	/**************************************
 	 * Gameplay Related Methods
 	 **************************************/
+	
+	
+	/***
+	 * This function will attempt
+	 * to place a piece on the board
+	 * 
+	 * As long as the space is not occupied
+	 * and the piece is valid it will return true
+	 * @param player
+	 * @param pieceID
+	 * @param locLabel
+	 * @return
+	 */
 	public boolean PlacePiece(Player player, int pieceID, String locLabel)
 	{
 		GamePiece curPiece = player.getPiece(pieceID);
 		Location newLoc = GetLocationByLabel(locLabel);
-		
-		// Check for invalid input.
-		if (curPiece == null || newLoc == null)
-		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid piece id or location label");
-			return false;
-		}
-		
-		// Make sure piece selection isn't placed already.
-		if (curPiece.getStatus() != GamePiece.UNPLACED)
-		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is already placed");
-			return false;
-		}
-		
+				
 		// Make sure the location is empty
 		if (!newLoc.ContainsPiece(null))
 		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Location - It contains a piece already");
+			JOptionPane.showMessageDialog(this.mw, "There is a piece there already");
 			return false;
 		}
 		
@@ -182,39 +257,36 @@ public class Board {
 
 	}
 
+	/***
+	 * This function will attempt to
+	 * move a piece on the board
+	 * 
+	 * As long as the space is not occupied
+	 * and the piece is the current users and
+	 * is valid it will return true
+	 * @param player
+	 * @param pieceID
+	 * @param locLabel
+	 * @return
+	 */
 	public boolean MovePiece(Player player, int pieceID, String locLabel)
 	{
 		GamePiece curPiece = player.getPiece(pieceID);
 		Location curLoc = GetPieceLocation(curPiece);
 		Location newLoc = GetLocationByLabel(locLabel);
 		
-		// Check for invalid input.
-		if (curPiece == null || newLoc == null)
-		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid piece id or location label");
-			return false;
-		}
-		
-		// Make sure piece selection is placed already.
-		if (curPiece.getStatus() != GamePiece.PLACED)
-		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is not placed nor in play");
-			return false;
-		}
-		
-			
 		// Detect if we are in fly mode. If not, make sure we're adjacent.
 		// Make sure the locations are neighbors.
 		if (!this.cheatMode && player.getScore() > 3 && !AreNeighbors(curLoc, newLoc))
 		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Location - It is not adjacent");
+			JOptionPane.showMessageDialog(this.mw, "That spot is not adjacent");
 			return false;
 		}
 		
 		// Make sure the location is empty
 		if (!newLoc.ContainsPiece(null))
 		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Location - It contains a piece already");
+			JOptionPane.showMessageDialog(this.mw, "There is a piece there already");
 			return false;
 		}
 		
@@ -238,25 +310,21 @@ public class Board {
 
 	}
 
+	/***
+	 * This function will attempt to
+	 * remove a piece from the board
+	 * 
+	 * As long as their is a piece at
+	 * that location, and it is the opponents
+	 * it will return true
+	 * @param player
+	 * @param pieceID
+	 * @return
+	 */
 	public boolean RemovePiece(Player player, int pieceID)
 	{
 		GamePiece curPiece = player.getPiece(pieceID);
-		Location curLoc = GetPieceLocation(curPiece);
-		
-		// Check for invalid input.
-		if (curPiece == null)
-		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Piece ID - Piece not found");
-			return false;
-		}
-		
-		// Make sure piece selection is placed already.
-		if (curPiece.getStatus() != GamePiece.PLACED)
-		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is not placed or alive/in play");
-			return false;
-		}
-		
+		Location curLoc = GetPieceLocation(curPiece);	
 		
 		// We're ok to remove the piece. Change to movement phase.
 		curLoc.setPiece(null);
@@ -266,7 +334,7 @@ public class Board {
 		// Grab the player's new calculated score.
 		int score = player.getScore();
 		
-		if (score == 3){
+		if (score == 3 && !this.cheatMode){
 			String s = "%s has engaged fly mode with 3 pieces remaining";
 			s = String.format(s, player.getName());
 			JOptionPane.showMessageDialog(this.mw, s);
@@ -288,6 +356,12 @@ public class Board {
 
 	}
 	
+	/***
+	 * This function will determine if a mill is
+	 * created from Location passed into it
+	 * @param loc
+	 * @return
+	 */
 	private boolean IsMill(Location loc)
 	{
 		int vertCount = CountAdjacent(loc, 0);
@@ -299,6 +373,14 @@ public class Board {
 			return false;
 	}
 	
+	/***
+	 * This function will count
+	 * the number of adjacent pieces
+	 * to the passed in location
+	 * @param loc
+	 * @param dir
+	 * @return
+	 */
 	private int CountAdjacent(Location loc, int dir)
 	{
 		Player owner = loc.getPiece().getOwner();
@@ -318,6 +400,13 @@ public class Board {
 		
 	}
 	
+	/***
+	 * This function will determine
+	 * if two locations are neighbors
+	 * @param loc1
+	 * @param loc2
+	 * @return
+	 */
 	private boolean AreNeighbors(Location loc1, Location loc2)
 	{
 		ArrayList<Location> all_neighbors = AllNeighbors(loc1);
@@ -327,7 +416,7 @@ public class Board {
 			return false;
 	}
 	
-	/*
+	/***
 	 *  Returns locations with a defined direction and a owner that
 	 *  are neighbors to the supplied location.
 	 */
@@ -361,6 +450,12 @@ public class Board {
 		return NeighborList;
 	}
 	
+	/***
+	 * This function will return a list
+	 * of all the neighbors to a given Location
+	 * @param loc
+	 * @return
+	 */
 	private ArrayList<Location> AllNeighbors(Location loc)
 	{
 		ArrayList<Location> NeighborList = new ArrayList<Location>();
@@ -376,6 +471,12 @@ public class Board {
 		return NeighborList;
 	}
 	
+	/***
+	 * This function will return the location of the given piece
+	 * or return null if not found
+	 * @param piece
+	 * @return
+	 */
 	public Location GetPieceLocation(GamePiece piece)
 	{
 		for (int i = 0; i < location_list.size(); i++)
@@ -390,6 +491,12 @@ public class Board {
 	 * Gameboard Creation Related Methods
 	 **************************************/
 	
+	/***
+	 * This function will add a location
+	 * given the passed in label
+	 * @param label
+	 * @return
+	 */
 	private Location AddLocation(String label)
 	{
 		// First see if there is already a location with this label.
@@ -405,12 +512,27 @@ public class Board {
 		// Return either old location or the newly created one.
 		return newLocation;
 	}
+	
+	/***
+	 * This function will add an
+	 * edge between the two Locations,
+	 * give it a label, and its alignment
+	 * @param label
+	 * @param loc1
+	 * @param loc2
+	 * @param align
+	 */
 	private void AddEdge(String label, Location loc1, Location loc2, int align)
 	{
 		Edge newEdge = new Edge(label, loc1, loc2, align);
 		edge_list.add(newEdge);
 	}
 	
+	/***
+	 * This function will load the gameboard
+	 * from a .txt file to create the
+	 * location lists and edge lists
+	 */
 	private void LoadBoard()
 	{
 		BufferedReader br = null;
@@ -420,7 +542,7 @@ public class Board {
 		
 		try 
 		{
-			br = new BufferedReader(new FileReader("board.txt"));
+			br = new BufferedReader(new FileReader("resources\\board.txt"));
 			
 			// Load in each line of the file, creating new edges
 			// and locations as they are found.
@@ -446,8 +568,12 @@ public class Board {
 		}
 	}
 
-	/*
-	 * Count the number of available moves a player has.
+	/***
+	 * This function will count
+	 * the number of moves available for
+	 * a given player
+	 * @param player
+	 * @return
 	 */
 	public int numMovesAvailable(Player player)
 	{

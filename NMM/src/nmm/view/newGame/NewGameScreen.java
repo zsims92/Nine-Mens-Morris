@@ -9,7 +9,8 @@ import nmm.view.MainWindow;
 public class NewGameScreen extends JPanel{
 
 	/**
-	 * 
+	 * New game display
+	 * for nine-mens-morris
 	 */
 	private static final long serialVersionUID = 2841820904085389198L;
 	private MainWindow mw;
@@ -18,6 +19,16 @@ public class NewGameScreen extends JPanel{
 	private Integer mode;
 	private AIPlayer computer;
 	
+	/***
+	 * Constructor for NewGameScreen
+	 * 
+	 * Determines if game is PVE or PVP
+	 * from passed in mode
+	 * 
+	 * Creates AI for Game if needed
+	 * @param mw
+	 * @param mode
+	 */
 	public NewGameScreen(MainWindow mw, Integer mode){
 		this.setSize(800,600);
 		this.mw = mw;
@@ -34,11 +45,21 @@ public class NewGameScreen extends JPanel{
 		this.computer = new AIPlayer("Computer", "Black");
 	}
 	
-	
+	/***
+	 * Returns the mainWindow object
+	 * to the NewPVP and NewPVE classes
+	 * 
+	 * Used only to print dialog to main screen
+	 * @return
+	 */
 	public MainWindow getMainWindow(){
 		return this.mw;
 	}
 	
+	/***
+	 * Will start the game after
+	 * receiving good input from the user
+	 */
 	public void startGame(){
 		if(this.mode == 0){
 			Player p1 = new Player(this.pve.getP1Name(), this.pve.getP1Color());
@@ -51,7 +72,12 @@ public class NewGameScreen extends JPanel{
 		}	
 	}
 
-
+	/**
+	 * Will return the AI component of the game
+	 * It is created earlier to avoid color clashes
+	 * with the player
+	 * @return
+	 */
 	public AIPlayer getComputer() {
 		return computer;
 	}

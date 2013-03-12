@@ -11,7 +11,8 @@ import javax.swing.JTextField;
 
 public class NewPVE extends JPanel {
 	/**
-	 * 
+	 * NewPVE screen for
+	 * nine-mens-morris
 	 */
 	private static final long serialVersionUID = 6048218193452708272L;
 	private NewGameScreen ngs;
@@ -19,6 +20,11 @@ public class NewPVE extends JPanel {
 	private JTextField p1Color;
 	private JButton startBut;
 
+	/***
+	 * Default constructor
+	 * for a new PVE game
+	 * @param ngs
+	 */
 	public NewPVE(NewGameScreen ngs) {
 		this.ngs = ngs;
         JPanel top = new JPanel();
@@ -81,6 +87,11 @@ public class NewPVE extends JPanel {
         });
 	}
 
+	/**
+	 * Determines if the user input
+	 * is valid and starts a game if so
+	 * @param evt
+	 */
 	private void start(ActionEvent evt){
 		if(this.getP1Name().length() < 1){
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), " Enter a valid name for Player 1\r\n (Must be at least 1 character)");
@@ -100,6 +111,12 @@ public class NewPVE extends JPanel {
 		this.ngs.startGame();
 	}
 	
+	/**
+	 * Checks if the users inputted color
+	 * is a valid color
+	 * @param c
+	 * @return
+	 */
 	private int checkColor(String c) {
 		Color color;
 		try {
@@ -112,12 +129,26 @@ public class NewPVE extends JPanel {
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), c + " is not a valid color");
 			return 1;
 		}
+		if(color == Color.white){
+			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than white");
+			return 1;
+		}
 		return 0;
 	}
 
+	/***
+	 * Returns the name player 1
+	 * entered
+	 * @return
+	 */
 	public String getP1Name() {
 		return this.p1Name.getText();
 	}
+	
+	/***
+	 * Returns the color player 1 chose
+	 * @return
+	 */
 	public String getP1Color() {
 		return this.p1Color.getText();
 	}

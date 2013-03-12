@@ -12,7 +12,8 @@ import javax.swing.JTextField;
 
 public class NewPVP extends JPanel{
 	/**
-	 * 
+	 * NewPVP screen for
+	 * nine-mens-morris
 	 */
 	private static final long serialVersionUID = -4800315689039990773L;
 	private NewGameScreen ngs;
@@ -22,7 +23,11 @@ public class NewPVP extends JPanel{
 	private JTextField p2Color;
 	private JButton startBut;
 	
-	
+	/***
+	 * Default constructor for
+	 * a new PVP game
+	 * @param ngs
+	 */
 	public NewPVP(NewGameScreen ngs){
         JPanel top = new JPanel();
         JLabel message = new JLabel();
@@ -111,6 +116,11 @@ public class NewPVP extends JPanel{
 		this.ngs = ngs;
 	}
 	
+	/**
+	 * Determines if user input is valid
+	 * if so starts game
+	 * @param evt
+	 */
 	private void start(ActionEvent evt){
 		if(this.getP1Name().length() < 2){
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "    Enter a valid name for Player 1\r\n (Must be longer than 1 character)");
@@ -122,6 +132,14 @@ public class NewPVP extends JPanel{
 		}
 		if(this.getP1Color() == this.getP2Color()){
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose seperate colors for each player");
+			return;
+		}
+		if(this.getP1Color().toLowerCase() == "white"){
+			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than white");
+			return;
+		}
+		if(this.getP2Color().toLowerCase() == "white"){
+			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than white");
 			return;
 		}
 		if(this.getP1Color().length() < 2){
@@ -142,7 +160,13 @@ public class NewPVP extends JPanel{
 		
 		this.ngs.startGame();
 	}
-	
+		
+	/**
+	 * Determines if the players inputted
+	 * color is valid
+	 * @param c
+	 * @return
+	 */
 	private int checkColor(String c) {
 		Color color;
 		try {
@@ -158,15 +182,34 @@ public class NewPVP extends JPanel{
 		return 0;
 	}
 	
+	/***
+	 * Returns player 1's inputted name
+	 * @return
+	 */
 	public String getP1Name() {
 		return this.p1Name.getText();
 	}
+	
+	/***
+	 * Returns player 1's inputted color
+	 * @return
+	 */
 	public String getP1Color() {
 		return this.p1Color.getText();
 	}
+	
+	/***
+	 * Returns player 2's inputted name
+	 * @return
+	 */
 	public String getP2Name() {
 		return this.p2Name.getText();
 	}
+	
+	/***
+	 * Returns player 2's inputted color
+	 * @return
+	 */
 	public String getP2Color() {
 		return this.p2Color.getText();
 	}
