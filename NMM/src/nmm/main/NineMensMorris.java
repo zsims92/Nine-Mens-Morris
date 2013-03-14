@@ -1,6 +1,6 @@
 package nmm.main;
 
-import java.awt.EventQueue;
+import java.io.IOException;
 import java.util.Scanner;
 
 import nmm.model.Board;
@@ -13,10 +13,13 @@ public class NineMensMorris {
 	private static Player current_player;
 	private static Board gameboard;
 	
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) throws IOException 
+    {	
+    	// Open up system.in for input.
+        Scanner kbd = new Scanner(System.in);
+        
     	gameboard = new Board();
-    	GameSetup();
+    	GameSetup(kbd);
     	
     	int gamephase = gameboard.GetCurrentPhase(current_player);
     	
@@ -31,19 +34,19 @@ public class NineMensMorris {
     		{
     		case Board.PLACEMENT_PHASE: //placement
     			// If placement is successful, move on to next player.
-    			if (PlacementPhase())
+    			if (PlacementPhase(kbd))
     				nextPlayer();
     			break;
     			
     		case Board.MOVEMENT_PHASE: //movement
     			// Next player on successful move.
     			// Will return false if a move results in a mill, so that the player isn't skipped.
-    			if(MovementPhase())
+    			if(MovementPhase(kbd))
     				nextPlayer();
     			break;
     			
     		case Board.REMOVAL_PHASE: //removal
-    			if(RemovalPhase())
+    			if(RemovalPhase(kbd))
     				nextPlayer();
     			break;
     			
@@ -60,14 +63,14 @@ public class NineMensMorris {
     	
     	// Print victory message.
     	PrintSection(String.format("%s winss the game with a score of %d!", current_player.getName(), current_player.getScore()));
+    	kbd.close();
     }
     
-    private static boolean MovementPhase() 
+    private static boolean MovementPhase(Scanner kbd) 
     {
 		String input;
 		String tokens[];
 		int pieceID;
-		Scanner scanner = new Scanner(System.in);
 		
 		// Detect if the player has no moves available, and their score is above 3 (not fly mode)
 		if (gameboard.numMovesAvailable(current_player) == 0 && current_player.getScore() > 3)
@@ -77,9 +80,11 @@ public class NineMensMorris {
 		}
 		
 		System.out.printf("| [Movement] Player '%s', enter movement location [<PieceID>,<LocLabel>]: ", current_player.getName());
-		input = scanner.nextLine();
+		input = kbd.next();
 		
 		tokens = input.split(",");
+		
+		
 		if(tokens.length < 2)
 		{
 			PrintIndent("Input not recognized. Please try again.");
@@ -91,21 +96,20 @@ public class NineMensMorris {
 			return false;
 		}
 		pieceID = Integer.parseInt(tokens[0]);
-			
+		
 		return gameboard.MovePiece(current_player, pieceID, tokens[1]);
 		
 		
 	}
 
-	private static boolean RemovalPhase() 
+	private static boolean RemovalPhase(Scanner kbd) 
 	{
 		String input;
-		String tokens[];
 		int pieceID;
-		Scanner scanner = new Scanner(System.in);
 		
 		System.out.printf("| [Removal] Player '%s', enter opponent's piece ID for removal [<PieceID>]: ", current_player.getName());
-		input = scanner.nextLine();
+		input = kbd.next();
+		
 		
 		if(!isInt(input))
 		{
@@ -113,20 +117,20 @@ public class NineMensMorris {
 			return false;
 		}
 		pieceID = Integer.parseInt(input);
+		
 			
 		return gameboard.RemovePiece(inactivePlayer(), pieceID);
 		
 	}
 
-	private static boolean PlacementPhase() 
+	private static boolean PlacementPhase(Scanner kbd) 
 	{
 		String input;
 		String tokens[];
 		int pieceID;
-		Scanner scanner = new Scanner(System.in);
 		
 		System.out.printf("| [Placement] Player '%s', enter placement location [<PieceID>,<LocLabel>]: ", current_player.getName());
-		input = scanner.nextLine();
+		input = kbd.next();
 		
 		tokens = input.split(",");
 		if(tokens.length < 2)
@@ -141,46 +145,6 @@ public class NineMensMorris {
 		}
 		pieceID = Integer.parseInt(tokens[0]);
 		
-		// Code below for testing movement phase. Comment out code above and below to use.
-		/*gameboard.PlacePiece(player1, 0, "A");
-		gameboard.PlacePiece(player1, 1, "B");
-		gameboard.PlacePiece(player1, 2, "C");
-		gameboard.PlacePiece(player1, 3, "D");
-		gameboard.PlacePiece(player1, 4, "E");
-		gameboard.PlacePiece(player1, 5, "F");
-		gameboard.PlacePiece(player1, 6, "G");
-		gameboard.PlacePiece(player1, 7, "H");
-		gameboard.PlacePiece(player1, 8, "I");
-		gameboard.PlacePiece(player2, 0, "J");
-		gameboard.PlacePiece(player2, 1, "K");
-		gameboard.PlacePiece(player2, 2, "L");
-		gameboard.PlacePiece(player2, 3, "M");
-		gameboard.PlacePiece(player2, 4, "N");
-		gameboard.PlacePiece(player2, 5, "O");
-		gameboard.PlacePiece(player2, 6, "P");
-		gameboard.PlacePiece(player2, 7, "Q");
-		gameboard.PlacePiece(player2, 8, "R");*/
-		/*gameboard.PlacePiece(player1, 0, "A");
-		gameboard.PlacePiece(player2, 0, "B");
-		gameboard.PlacePiece(player1, 1, "C");
-		gameboard.PlacePiece(player2, 1, "D");
-		gameboard.PlacePiece(player1, 2, "E");
-		gameboard.PlacePiece(player2, 2, "F");
-		gameboard.PlacePiece(player1, 3, "G");
-		gameboard.PlacePiece(player2, 3, "H");
-		gameboard.PlacePiece(player1, 4, "I");
-		gameboard.PlacePiece(player2, 4, "J");
-		gameboard.PlacePiece(player1, 5, "K");
-		gameboard.PlacePiece(player2, 5, "L");
-		gameboard.PlacePiece(player1, 6, "M");
-		gameboard.PlacePiece(player2, 6, "N");
-		gameboard.PlacePiece(player1, 7, "O");
-		gameboard.PlacePiece(player2, 7, "P");
-		gameboard.PlacePiece(player1, 8, "Q");
-		gameboard.PlacePiece(player2, 8, "R");
-		nextPlayer();*/
-		
-		//return true;
 		return gameboard.PlacePiece(current_player, pieceID, tokens[1]);
 		
 		
@@ -197,23 +161,29 @@ public class NineMensMorris {
 		return true;
 	}
 
-	public static void GameSetup()
+	public static void GameSetup(Scanner kbd)
     {
-    	String name1, name2;
-    	Scanner scanner = new Scanner(System.in);
+    	String name1 = "Player1", name2 = "Player2";
     	
     	PrintSection("Welcome To Nine Men's Morris!");
     	PrintIndent("Game Setup:");
     	
     	// Request a name for player 1.
     	System.out.print("| Enter Player 1's Name: ");
-    	name1 = scanner.nextLine();
+		name1 = kbd.nextLine();
+			
+		// Request a name for player 2
     	System.out.print("| Enter Player 2's Name: ");
-    	name2 = scanner.nextLine();
-    	
+		name2 = kbd.nextLine();
+    	    	
     	player1 = new Player(name1, "RED");
     	player2 = new Player(name2, "BLUE");
-    	current_player = player1;
+    	
+    	// Randomly select a starting player
+    	if (Math.random() * 50.0d >= 25)
+    		current_player = player1;
+    	else
+    		current_player = player2;
     }
 	
 	private static void nextPlayer()
