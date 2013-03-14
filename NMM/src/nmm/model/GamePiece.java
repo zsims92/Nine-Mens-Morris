@@ -13,7 +13,8 @@ public class GamePiece implements Comparable<GamePiece>
 	
 	public static final int UNPLACED = 0;
 	public static final int PLACED = 1;
-	public static final int DEAD = 2;
+	public static final int MOVED = 2;
+	public static final int DEAD = 3;
 	
 	public GamePiece(Color color, Player owner)
 	{
@@ -24,12 +25,12 @@ public class GamePiece implements Comparable<GamePiece>
 	{
 		this.color = color;
 		this.owner = owner;
-		this.status = 0;
+		this.status = UNPLACED;
 		this.id = id;
 	}
 	public boolean IsAlive()
 	{
-		if (this.status == UNPLACED || this.status == PLACED)
+		if (this.status != DEAD)
 			return true;
 		else
 			return false;
@@ -55,5 +56,12 @@ public class GamePiece implements Comparable<GamePiece>
 
 	public int getID() {
 		return id;
+	}
+	public boolean inPlay()
+	{
+		if (status == PLACED || status == MOVED)
+			return true;
+		else
+			return false;
 	}
 }

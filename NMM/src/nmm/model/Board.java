@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import nmm.model.user.Player;
@@ -24,10 +23,6 @@ public class Board {
 	
 	// Number to letter array.
 	public static final char[] ALPHABET = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-
-	
-	// Stuff from Zach's gui
-	private int[][] boardArray;
 	
 	public Board(){
 		// Load the edge and location list from file
@@ -50,7 +45,7 @@ public class Board {
 		if (curplayer.getPiecesPlayed() < 9)
 			return PLACEMENT_PHASE;
 
-		// See if phase has been set to REMOVAL
+		// See if phase has been set to REMOVAL or GAMEOVER
 		else if (current_phase == REMOVAL_PHASE || current_phase == GAMEOVER_PHASE)
 			return current_phase;
 		
@@ -61,18 +56,6 @@ public class Board {
 
 	public void SetCurrentPhase(int current_phase) {
 		this.current_phase = current_phase;
-	}
-	
-
-
-	
-	private Edge GetEdgeByLabel(String label)
-	{
-		for(int i = 0; i < edge_list.size(); i++)
-			if (edge_list.get(i).GetLabel().equals(label))
-				return edge_list.get(i);
-				
-		return null;
 	}
 	
 	private Location GetLocationByLabel(String label)
@@ -102,7 +85,7 @@ public class Board {
 		// Make sure piece selection isn't placed already.
 		if (curPiece.getStatus() != GamePiece.UNPLACED)
 		{
-			System.out.println("| Invalid Piece - It is already placed.");
+			System.out.println("| Invalid Piece - It is already placed or dead.");
 			return false;
 		}
 		
@@ -134,7 +117,7 @@ public class Board {
 		}
 		
 		// Make sure piece selection is placed already.
-		if (curPiece.getStatus() != GamePiece.PLACED)
+		if (!curPiece.inPlay())
 		{
 			System.out.println("| Invalid Piece - It is not placed nor in play.");
 			return false;
@@ -156,6 +139,7 @@ public class Board {
 		}
 		
 		// We're ok to move the piece.
+		curPiece.setStatus(GamePiece.MOVED);
 		newLoc.setPiece(curPiece);
 		curLoc.setPiece(null);
 		
@@ -186,10 +170,19 @@ public class Board {
 		}
 		
 		// Make sure piece selection is placed already.
-		if (curPiece.getStatus() != GamePiece.PLACED)
+		if (!curPiece.inPlay())
 		{
 			System.out.println("| Invalid Piece - It is not placed or alive/in play.");
 			return false;
+		}
+		
+		// Make sure the piece is not part of a mill if the player has more than 3 pieces remaining.
+		if (player.getScore() > 3 && IsMill(curLoc))
+		{
+			System.out.println("| Invalid Piece - You cannot remove a member of a mill.");
+			return false;
+			
+			//blah
 		}
 		
 		
@@ -237,19 +230,36 @@ public class Board {
 	private int CountAdjacent(Location loc, int dir)
 	{
 		Player owner = loc.getPiece().getOwner();
+		int status1, status2;
 		
 		ArrayList<Location> nghbrs = SomeNeighbors(loc, dir, owner);
 		if (nghbrs.size() == 2)
-			return 3;
-		else if (nghbrs.size() == 1)
 		{
-			// See if the neighbor has another adjacent neighbor.
-			if(SomeNeighbors(nghbrs.get(0), dir, owner).size() == 2)
-				return 3;
+			// Store the neighbors status's to make sure at least one has moved (req to become a mill)
+			status1 = nghbrs.get(0).getPiece().getStatus();
+			status2 = nghbrs.get(1).getPiece().getStatus();	
 			
-			return 2;
-		}
-		return 1;
+		} else if (nghbrs.size() == 1) {
+			status1 = nghbrs.get(0).getPiece().getStatus();
+			
+			// See if the neighbor has another adjacent neighbor.
+			nghbrs = SomeNeighbors(nghbrs.get(0), dir, owner);
+			nghbrs.remove(loc);
+			
+			if(nghbrs.size() == 1)
+			{
+				status2 = nghbrs.get(0).getPiece().getStatus();
+			} else
+				return 0;
+			
+		} else
+			return 0;
+		
+		// Make sure at least one piece of the mill has moved.
+		if (status1 == GamePiece.MOVED || status2 == GamePiece.MOVED || loc.getPiece().getStatus() == GamePiece.MOVED)
+			return 3;
+		else
+			return 0;
 		
 	}
 	
@@ -535,46 +545,5 @@ public class Board {
 		System.out.println();
 
 	}
-	/*
-	private int[][] newBoard() {
-		int[][] bd = new int[7][7];
-		for(int i=0; i<7; i++)
-			for(int j=0; j<7; j++){
-				bd[i][j] = 1;
-			}
-		ArrayList<ArrayList<Integer>> placeableSpots = validSpots();
-		int k = 0;
-		for(ArrayList<Integer> i: placeableSpots){
-			for(Integer j: i){
-				bd[k][j] = -1;
-			}
-			k++;
-		}
-		
-		return bd;
-	}
-	private ArrayList<ArrayList<Integer>> validSpots() {
-		ArrayList<ArrayList<Integer>> p = new ArrayList<ArrayList<Integer>>();
-		ArrayList<Integer> row0 = new ArrayList<Integer>(Arrays.asList(1,2,4,5));
-		ArrayList<Integer> row1 = new ArrayList<Integer>(Arrays.asList(0,2,4,6));
-		ArrayList<Integer> row2 = new ArrayList<Integer>(Arrays.asList(0,1,5,6));
-		ArrayList<Integer> row3 = new ArrayList<Integer>(Arrays.asList(3));
-		ArrayList<Integer> row4 = new ArrayList<Integer>(Arrays.asList(0,1,5,6));
-		ArrayList<Integer> row5 = new ArrayList<Integer>(Arrays.asList(0,2,4,6));
-		ArrayList<Integer> row6 = new ArrayList<Integer>(Arrays.asList(1,2,4,5));
-		
-		p.add(row0);
-		p.add(row1);
-		p.add(row2);
-		p.add(row3);
-		p.add(row4);
-		p.add(row5);
-		p.add(row6);
-		return p;
-	}
-	
-	public int[][] getBoardArray() {
-		return this.boardArray;
-	}
-*/
+
 }
