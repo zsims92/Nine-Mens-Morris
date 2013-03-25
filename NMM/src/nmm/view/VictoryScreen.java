@@ -1,53 +1,83 @@
-package nmm.view;
+	package nmm.view;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.LayoutStyle;
+import javax.swing.JPanel;
 
 import nmm.model.user.Player;
 
 public class VictoryScreen extends JComponent{
 
 	/**
-	 * 
+	 * Victory Screen for
+	 * nine-mens-morris
 	 */
 	private static final long serialVersionUID = 4655939260856856256L;
-	private JLabel p1Name;
-    private JLabel p2Name;
     private JButton pAgainBut;
     private JButton quitBut;
-    private JLabel sorryText;
-    private JLabel winnerLabel;
     private MainWindow mw;
     
+    /***
+     * Default constructor for the
+     * victory screen
+     * 
+     * Shows the winners name and the losers
+     * name along with a short message
+     * 
+     * Has buttons to play again or quit
+     * @param mw
+     * @param victor
+     * @param loser
+     */
 	public VictoryScreen(MainWindow mw, Player victor, Player loser) {
-		p1Name = new JLabel();
-        winnerLabel = new JLabel();
-        sorryText = new JLabel();
-        p2Name = new JLabel();
+		this.mw = mw;
+        JPanel winnerPanel = new JPanel();
+        JLabel winnerText = new JLabel();
+        JPanel loserPanel = new JPanel();
+        JLabel loserText = new JLabel();
+        JPanel buttonPanel = new JPanel();
         pAgainBut = new JButton();
         quitBut = new JButton();
-        this.mw = mw;
 
-        p1Name.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        p1Name.setText(victor.getName());
+        setLayout(new java.awt.GridLayout(3, 1));
 
-        winnerLabel.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        winnerLabel.setText("is the Winner!");
+        winnerPanel.setLayout(new java.awt.BorderLayout());
 
-        sorryText.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        sorryText.setText("Sorry");
+        winnerText.setFont(new java.awt.Font("Traditional Arabic", 0, 48)); // NOI18N
+        winnerText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        String s = "Congratulations %s, Good Game";
+        s = String.format(s, victor.getName());
+        winnerText.setText(s);
+        winnerPanel.add(winnerText, java.awt.BorderLayout.CENTER);
 
-        p2Name.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        p2Name.setText(loser.getName() + ".");
+        add(winnerPanel);
 
+        loserPanel.setLayout(new java.awt.BorderLayout());
+
+        loserText.setFont(new java.awt.Font("Traditional Arabic", 0, 48)); // NOI18N
+        loserText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        String t = "Sorry, %s.  Better luck next time";
+        t = String.format(t, loser.getName());
+        loserText.setText(t);
+        loserPanel.add(loserText, java.awt.BorderLayout.CENTER);
+
+        add(loserPanel);
+
+        buttonPanel.setLayout(new java.awt.GridLayout(1, 2));
+
+        pAgainBut.setFont(new java.awt.Font("Traditional Arabic", 0, 48)); // NOI18N
         pAgainBut.setText("Play Again?");
+        buttonPanel.add(pAgainBut);
 
+        quitBut.setFont(new java.awt.Font("Traditional Arabic", 0, 48)); // NOI18N
         quitBut.setText("Quit");
+        buttonPanel.add(quitBut);
+
+        add(buttonPanel);
+        
         pAgainBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newGame(evt);
@@ -59,58 +89,21 @@ public class VictoryScreen extends JComponent{
             }
         });
         
-        this.setLayout();
 	}
 
+	/**
+	 * Ends the program
+	 * @param evt
+	 */
 	private void end(ActionEvent evt) {
 		this.mw.quit(evt);		
 	}
 
+	/**
+	 * Starts a new game
+	 * @param evt
+	 */
 	private void newGame(ActionEvent evt) {
 		this.mw.reset(evt);
-		
 	}
-
-	private void setLayout(){
-        GroupLayout layout = new GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(70, 70, 70)
-                        .addComponent(p1Name)
-                        .addGap(10, 10, 10)
-                        .addComponent(winnerLabel, GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(73, 73, 73)
-                        .addComponent(pAgainBut)
-                        .addGap(18, 18, 18)
-                        .addComponent(quitBut, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
-                        .addComponent(sorryText)
-                        .addGap(10, 10, 10)
-                        .addComponent(p2Name)))
-                .addContainerGap(75, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(p1Name)
-                    .addComponent(winnerLabel))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(sorryText)
-                    .addComponent(p2Name))
-                .addGap(49, 49, 49)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(pAgainBut)
-                    .addComponent(quitBut)))
-        );
-	}
-
 }

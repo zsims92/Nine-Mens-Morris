@@ -3,17 +3,16 @@ package nmm.view.newGame;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
 
 public class NewPVE extends JPanel {
 	/**
-	 * 
+	 * NewPVE screen for
+	 * nine-mens-morris
 	 */
 	private static final long serialVersionUID = 6048218193452708272L;
 	private NewGameScreen ngs;
@@ -21,81 +20,93 @@ public class NewPVE extends JPanel {
 	private JTextField p1Color;
 	private JButton startBut;
 
+	/***
+	 * Default constructor
+	 * for a new PVE game
+	 * @param ngs
+	 */
 	public NewPVE(NewGameScreen ngs) {
 		this.ngs = ngs;
-		p1Name = new JTextField();
+        JPanel top = new JPanel();
+        JLabel message = new JLabel();
+        JPanel middle = new JPanel();
+        JPanel p1BackPanel = new JPanel();
+        JLabel p1NameLabel = new JLabel();
+        p1Name = new JTextField();
+        JLabel p1ColorLabel = new JLabel();
         p1Color = new JTextField();
-
+        JPanel bot = new JPanel();
         startBut = new JButton();
-        this.setLayout();
-        
+
+        setLayout(new java.awt.GridLayout(3, 1, 0, 250));
+
+        top.setLayout(new java.awt.BorderLayout());
+
+        message.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        message.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        message.setText("<html>Enter the information below<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to start a new game</html>");
+        top.add(message, java.awt.BorderLayout.CENTER);
+
+        add(top);
+
+        middle.setLayout(new java.awt.GridLayout());
+
+        p1BackPanel.setLayout(new java.awt.GridLayout(4, 0));
+
+        p1NameLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        p1NameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        p1NameLabel.setText("Player 1 Name");
+        p1BackPanel.add(p1NameLabel);
+
+        p1Name.setHorizontalAlignment(JTextField.CENTER);
+        p1BackPanel.add(p1Name);
+
+        p1ColorLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        p1ColorLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        p1ColorLabel.setText("Player 1 Color");
+        p1BackPanel.add(p1ColorLabel);
+
+        p1Color.setHorizontalAlignment(JTextField.CENTER);
+        p1BackPanel.add(p1Color);
+
+        middle.add(p1BackPanel);
+
+        add(middle);
+
+        bot.setLayout(new java.awt.BorderLayout());
+
+        startBut.setFont(new java.awt.Font("Traditional Arabic", 0, 36)); // NOI18N
         startBut.setText("Start Game");
+        bot.add(startBut, java.awt.BorderLayout.CENTER);
+
+        add(bot);
         startBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 start(evt);
             }
         });
 	}
-	
-	private void setLayout(){
-        JLabel jLabel1 = new JLabel();
-        JLabel jLabel3 = new JLabel();
-        JLabel jLabel5 = new JLabel();
-        jLabel1.setText("Player 1 Name");
-        jLabel3.setText("Player 1 Color");
 
-        jLabel5.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jLabel5.setText("<html>&nbsp;&nbsp;Enter the Information below<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to start a new Game</html>");
-		
-        GroupLayout layout = new GroupLayout(this);
-        this.setLayout(layout);
-	    layout.setHorizontalGroup(
-	        layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	        .addGroup(layout.createSequentialGroup()
-	            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	                .addGroup(layout.createSequentialGroup()
-	                    .addGap(19, 19, 19)
-	                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	                        .addComponent(jLabel5, GroupLayout.PREFERRED_SIZE, 229, GroupLayout.PREFERRED_SIZE)))
-	                .addGroup(layout.createSequentialGroup()
-	                    .addGap(93, 93, 93)
-	                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	                        .addComponent(jLabel3)
-	                        .addComponent(p1Color, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-	                        .addComponent(jLabel1)
-	                        .addComponent(p1Name, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
-	                .addGroup(layout.createSequentialGroup()
-	                    .addGap(81, 81, 81)
-	                    .addComponent(startBut)))
-	            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-	    );
-	    layout.setVerticalGroup(
-	        layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	        .addGroup(layout.createSequentialGroup()
-	            .addContainerGap()
-	            .addComponent(jLabel5)
-	            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-	            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-	            .addComponent(jLabel1)
-	            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-	            .addComponent(p1Name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-	            .addGap(18, 18, 18)
-	            .addComponent(jLabel3)
-	            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-	            .addComponent(p1Color, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-	            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-	            .addComponent(startBut)
-	            .addContainerGap(27, Short.MAX_VALUE))
-	    );
-	}
-
+	/**
+	 * Determines if the user input
+	 * is valid and starts a game if so
+	 * @param evt
+	 */
 	private void start(ActionEvent evt){
 		if(this.getP1Name().length() < 1){
-			JOptionPane.showMessageDialog(null, " Enter a valid name for Player 1\r\n (Must be at least 1 character)");
+			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), " Enter a valid name for Player 1\r\n (Must be at least 1 character)");
 			return;
 		}
 		if(this.getP1Color().length() < 1){
-			JOptionPane.showMessageDialog(null, "Enter a color for Player 1");
+			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Enter a color for Player 1");
+			return;
+		}
+		if(this.getP1Color().equalsIgnoreCase(this.ngs.getComputer().getColor().toString())){
+			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than what the computer chose");
+			return;
+		}
+		if(this.getP1Color().equalsIgnoreCase("white")){
+			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than white");
 			return;
 		}
 		int check = checkColor(this.getP1Color());
@@ -104,6 +115,12 @@ public class NewPVE extends JPanel {
 		this.ngs.startGame();
 	}
 	
+	/**
+	 * Checks if the users inputted color
+	 * is a valid color
+	 * @param c
+	 * @return
+	 */
 	private int checkColor(String c) {
 		Color color;
 		try {
@@ -113,15 +130,29 @@ public class NewPVE extends JPanel {
 		    color = null; // Not defined
 		}
 		if(color == null){
-			JOptionPane.showMessageDialog(null, c + " is not a valid color");
+			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), c + " is not a valid color");
+			return 1;
+		}
+		if(color == Color.white){
+			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than white");
 			return 1;
 		}
 		return 0;
 	}
 
+	/***
+	 * Returns the name player 1
+	 * entered
+	 * @return
+	 */
 	public String getP1Name() {
 		return this.p1Name.getText();
 	}
+	
+	/***
+	 * Returns the color player 1 chose
+	 * @return
+	 */
 	public String getP1Color() {
 		return this.p1Color.getText();
 	}
