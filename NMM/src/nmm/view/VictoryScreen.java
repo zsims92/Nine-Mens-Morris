@@ -1,4 +1,4 @@
-	package nmm.view;
+package nmm.view;
 
 import java.awt.event.ActionEvent;
 

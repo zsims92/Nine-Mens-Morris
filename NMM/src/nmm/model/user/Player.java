@@ -50,16 +50,12 @@ public class Player {
 		
 		return null;
 	}
-<<<<<<< HEAD
 	
 	/**
 	 * Will create A color object from a given
 	 * string
 	 * @param color
 	 */
-=======
-
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 	private void setColor(String color){
 		Color c = null;	
 		try {
@@ -135,6 +131,4 @@ public class Player {
 	public boolean isHuman() {
 		return true;
 	}
-
-
 }

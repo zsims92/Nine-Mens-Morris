@@ -41,7 +41,7 @@ public class GamePiece implements Comparable<GamePiece>
 	{
 		this.color = color;
 		this.owner = owner;
-		this.status = UNPLACED;
+		this.status = 0;
 		this.id = id;
 	}
 	
@@ -137,10 +137,7 @@ public class GamePiece implements Comparable<GamePiece>
 	public int getID() {
 		return id;
 	}
-<<<<<<< HEAD
 	
-=======
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 	public boolean inPlay()
 	{
 		if (status == PLACED || status == MOVED)

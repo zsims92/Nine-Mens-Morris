@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import javax.swing.JOptionPane;
@@ -28,7 +29,6 @@ public class Board {
 	public static final int REMOVAL_PHASE = 2;
 	
 	// Number to letter array.
-<<<<<<< HEAD
 	public static final char[] ALPHABET = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X'};
 	public static final String[] BOARDREFERENCE = {"0,0","0,3","0,6","1,1","1,3","1,5","2,2","2,3","2,4","3,0","3,1","3,2","3,4","3,5","3,6","4,2","4,3","4,4","5,1","5,3","5,5","6,0","6,3","6,6"};
 	
@@ -51,9 +51,6 @@ public class Board {
 		cheatMode = bd.cheatMode;
 		mw = bd.mw;
 	}
-=======
-	public static final char[] ALPHABET = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 	
 	/***
 	 * The normal constructor for the
@@ -123,13 +120,8 @@ public class Board {
 		if (curplayer.getPiecesPlayed() < 9)
 			return PLACEMENT_PHASE;
 
-<<<<<<< HEAD
 		// See if phase has been set to REMOVAL
 		else if (current_phase == REMOVAL_PHASE || current_phase == GAMEOVER_PHASE){
-=======
-		// See if phase has been set to REMOVAL or GAMEOVER
-		else if (current_phase == REMOVAL_PHASE || current_phase == GAMEOVER_PHASE)
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 			return current_phase;
 		}
 		
@@ -138,7 +130,6 @@ public class Board {
 			return MOVEMENT_PHASE;
 	}
 	
-<<<<<<< HEAD
 	
 	/***
 	 * This function will turn on
@@ -164,9 +155,6 @@ public class Board {
 	 * @return
 	 */
 	public Location GetLocationByLabel(String label)
-=======
-	private Location GetLocationByLabel(String label)
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 	{
 		for(int i = 0; i < location_list.size(); i++)
 			if (location_list.get(i).getLabel().equals(label))
@@ -264,11 +252,7 @@ public class Board {
 		// Make sure piece selection isn't placed already.
 		if (curPiece.getStatus() != GamePiece.UNPLACED)
 		{
-<<<<<<< HEAD
 			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is already placed or dead");
-=======
-			System.out.println("| Invalid Piece - It is already placed or dead.");
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 			return false;
 		}
 
@@ -382,24 +366,10 @@ public class Board {
 			return false;
 		}
 		
-<<<<<<< HEAD
 		if (player.getScore() > 3 && IsMill(curLoc))
-=======
-		// Make sure piece selection is placed already.
-		if (!curPiece.inPlay())
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 		{
 			JOptionPane.showMessageDialog(this.mw, "You cannot remove a member of a mill");
 			return false;
-		}
-		
-		// Make sure the piece is not part of a mill if the player has more than 3 pieces remaining.
-		if (player.getScore() > 3 && IsMill(curLoc))
-		{
-			System.out.println("| Invalid Piece - You cannot remove a member of a mill.");
-			return false;
-			
-			//blah
 		}
 		
 		
@@ -459,18 +429,13 @@ public class Board {
 	{
 		Player owner = loc.getPiece().getOwner();
 		int status1, status2;
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 		ArrayList<Location> nghbrs = SomeNeighbors(loc, dir, owner);
 		if (nghbrs.size() == 2)
 		{
 			// Store the neighbors status's to make sure at least one has moved (req to become a mill)
 			status1 = nghbrs.get(0).getPiece().getStatus();
 			status2 = nghbrs.get(1).getPiece().getStatus();	
-<<<<<<< HEAD
 
 		} else if (nghbrs.size() == 1) {
 			status1 = nghbrs.get(0).getPiece().getStatus();
@@ -479,31 +444,14 @@ public class Board {
 			nghbrs = SomeNeighbors(nghbrs.get(0), dir, owner);
 			nghbrs.remove(loc);
 
-=======
-			
-		} else if (nghbrs.size() == 1) {
-			status1 = nghbrs.get(0).getPiece().getStatus();
-			
-			// See if the neighbor has another adjacent neighbor.
-			nghbrs = SomeNeighbors(nghbrs.get(0), dir, owner);
-			nghbrs.remove(loc);
-			
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 			if(nghbrs.size() == 1)
 			{
 				status2 = nghbrs.get(0).getPiece().getStatus();
 			} else
 				return 0;
-<<<<<<< HEAD
 		} else
 			return 0;
 
-=======
-			
-		} else
-			return 0;
-		
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 		// Make sure at least one piece of the mill has moved.
 		if (status1 == GamePiece.MOVED || status2 == GamePiece.MOVED || loc.getPiece().getStatus() == GamePiece.MOVED)
 			return 3;
@@ -707,55 +655,4 @@ public class Board {
 		return count;
 	}
 
-<<<<<<< HEAD
-=======
-		System.out.println();
-
-		System.out.print("\t\t");
-
-		for(int i=15; i<18; i++)
-		{
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player + "\t");
-		}
-
-		System.out.println();
-		System.out.print("\t");
-
-		for(int i=18; i<21; i++)
-		{
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player + "\t\t");
-		}
-
-		System.out.println();
-
-		for(int i=21; i<24; i++){
-			if(location_list.get(i).getPiece() == null){
-				player = "  ";
-			}else{
-				player = location_list.get(i).getPiece().getOwner().getName();
-				player = player + location_list.get(i).getPiece().getID();
-			}
-			player = location_list.get(i).getLabel() + "[" + player + "]";
-			System.out.print(player + "\t\t\t");
-		}
-
-		System.out.println();
-
-	}
-
->>>>>>> c379f9df8ec1ff154b8f75ef10727c60a963a919
 }
