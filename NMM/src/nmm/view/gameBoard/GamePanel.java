@@ -3,6 +3,8 @@ package nmm.view.gameBoard;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -11,12 +13,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import nmm.controller.NMMGameModel;
 import nmm.model.Board;
 import nmm.model.GamePiece;
+import nmm.model.Glow;
 
-public class GamePanel extends JPanel implements MouseListener{
+public class GamePanel extends JPanel implements MouseListener, ActionListener{
 
 	/**
 	 * Game Board display
@@ -55,6 +59,9 @@ public class GamePanel extends JPanel implements MouseListener{
                 new Dimension(CELL_SIZE * COLS+50, CELL_SIZE * ROWS+50));
          this.setBackground(Color.WHITE);
          this.addMouseListener(this);
+         
+         int delay = 75;
+         new Timer(delay, this).start();
 	}	
 	
 	/**
@@ -81,9 +88,13 @@ public class GamePanel extends JPanel implements MouseListener{
 				else if(gameBoard[r][c].getSelected()){
             		g.setColor(gameBoard[r][c].getColor());
             		g.fillOval(x+10, y+10, CELL_SIZE-20, CELL_SIZE-20);
-            		
-            		g.setColor(Color.WHITE);
-            		g.fillOval(x+30, y+30, CELL_SIZE-60, CELL_SIZE-60);
+            		Glow gl = gameBoard[r][c].getGl();
+            		gl.update();
+            		int newx = gl.getX();
+            		int newy = gl.getY();
+            		Color color = gl.getColor();
+            		g.setColor(color);
+            		g.fillOval(x+newx, y+newy, CELL_SIZE-(newx*2), CELL_SIZE-(newy*2));
 				}
 				else{
 					g.setColor(gameBoard[r][c].getColor());
@@ -102,6 +113,12 @@ public class GamePanel extends JPanel implements MouseListener{
 		g.drawImage(board, 25, 25, 725, 725, 0, 0, 700, 700, null);
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		this.revalidate();
+		this.gb.repaint();
+	}	
+	
 	@Override
 	/***
 	 * If a mouse is clicked determine
@@ -158,6 +175,7 @@ public class GamePanel extends JPanel implements MouseListener{
 		
 		return true;
 	}
+	
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -174,5 +192,7 @@ public class GamePanel extends JPanel implements MouseListener{
 	@Override
 	public void mouseExited(MouseEvent e) {
 		
-	}	
+	}
+
+
 }

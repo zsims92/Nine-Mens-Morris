@@ -11,17 +11,16 @@ public class GamePiece implements Comparable<GamePiece>
 	private Integer status;
 	private int id;
 	private boolean selected;
+	private Glow gl;
 	
 	public static final int UNPLACED = 0;
 	public static final int PLACED = 1;
 	public static final int MOVED = 2;
 	public static final int DEAD = 3;
 	
-	private int glow = 0;
-	
 	/***
 	 * Creates a game piece given the color
-	 * and owener
+	 * and owner
 	 * @param color
 	 * @param owner
 	 */
@@ -43,15 +42,7 @@ public class GamePiece implements Comparable<GamePiece>
 		this.owner = owner;
 		this.status = 0;
 		this.id = id;
-	}
-	
-	public int getGlow(){
-		return this.glow;
-	}
-	
-	public void updateGlow(){
-		this.glow++;
-		this.glow %= 4;
+		this.gl = new Glow();
 	}
 	
 	/***
@@ -69,11 +60,10 @@ public class GamePiece implements Comparable<GamePiece>
 	 * @param select
 	 */
 	public void select(boolean select){
-		if(!select){
-			this.glow = 0;
-		}
-		
 		this.selected = select;
+		if(!select){
+			this.gl = new Glow();
+		}
 	}
 	
 	/**
@@ -144,5 +134,13 @@ public class GamePiece implements Comparable<GamePiece>
 			return true;
 		else
 			return false;
+	}
+
+	public void setGl(Glow gl) {
+		this.gl = gl;
+	}
+
+	public Glow getGl() {
+		return gl;
 	}
 }
