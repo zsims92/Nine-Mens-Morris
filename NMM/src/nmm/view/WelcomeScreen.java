@@ -83,6 +83,7 @@ public class WelcomeScreen extends JComponent{
         });
 		
         bot.add(pvp);
+        this.pve.setEnabled(false);
 
         add(bot);
 	}

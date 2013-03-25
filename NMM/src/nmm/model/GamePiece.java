@@ -14,7 +14,10 @@ public class GamePiece implements Comparable<GamePiece>
 	
 	public static final int UNPLACED = 0;
 	public static final int PLACED = 1;
-	public static final int DEAD = 2;
+	public static final int MOVED = 2;
+	public static final int DEAD = 3;
+	
+	private int glow = 0;
 	
 	/***
 	 * Creates a game piece given the color
@@ -42,6 +45,15 @@ public class GamePiece implements Comparable<GamePiece>
 		this.id = id;
 	}
 	
+	public int getGlow(){
+		return this.glow;
+	}
+	
+	public void updateGlow(){
+		this.glow++;
+		this.glow %= 4;
+	}
+	
 	/***
 	 * returns the boolean
 	 * of whether the piece is selected
@@ -57,6 +69,10 @@ public class GamePiece implements Comparable<GamePiece>
 	 * @param select
 	 */
 	public void select(boolean select){
+		if(!select){
+			this.glow = 0;
+		}
+		
 		this.selected = select;
 	}
 	
@@ -66,7 +82,7 @@ public class GamePiece implements Comparable<GamePiece>
 	 */
 	public boolean IsAlive()
 	{
-		if (this.status == UNPLACED || this.status == PLACED)
+		if (this.status != DEAD)
 			return true;
 		else
 			return false;
@@ -120,5 +136,13 @@ public class GamePiece implements Comparable<GamePiece>
 	 */
 	public int getID() {
 		return id;
+	}
+	
+	public boolean inPlay()
+	{
+		if (status == PLACED || status == MOVED)
+			return true;
+		else
+			return false;
 	}
 }

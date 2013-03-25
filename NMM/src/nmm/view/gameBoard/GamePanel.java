@@ -81,10 +81,8 @@ public class GamePanel extends JPanel implements MouseListener{
 				else if(gameBoard[r][c].getSelected()){
             		g.setColor(gameBoard[r][c].getColor());
             		g.fillOval(x+10, y+10, CELL_SIZE-20, CELL_SIZE-20);
-            		if(gameBoard[r][c].getColor() == Color.WHITE)
-            			g.setColor(Color.BLACK);
-            		else
-            			g.setColor(Color.WHITE);
+            		
+            		g.setColor(Color.WHITE);
             		g.fillOval(x+30, y+30, CELL_SIZE-60, CELL_SIZE-60);
 				}
 				else{
@@ -140,7 +138,7 @@ public class GamePanel extends JPanel implements MouseListener{
 	 * @return
 	 */
 	private boolean convertToLabel(int row, int col) {
-		char[] labels =Board.ALPHABET;
+		char[] labels = Board.ALPHABET;
 		String[] points = Board.BOARDREFERENCE;
 		String label = "Z";
 		

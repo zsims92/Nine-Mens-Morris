@@ -34,7 +34,7 @@ public class Location implements Comparable<Location> {
 	}
 
 	/**
-	 * Determins if the location contains
+	 * Determines if the location contains
 	 * a piece
 	 * @param inPiece
 	 * @return

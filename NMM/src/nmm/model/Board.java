@@ -90,8 +90,8 @@ public class Board {
 			Location loc = this.GetLocationByLabel(label);
 			if(loc.getPiece() != null)
 				this.boardArray[row][col] = loc.getPiece();
-//			else
-//				this.boardArray[row][col] = new GamePiece(new Player("", "red").getColor(), new Player("", "red"), -1);
+			else
+				this.boardArray[row][col] = new GamePiece(new Player("", "red").getColor(), new Player("", "red"), -1);
 		}
 	}
 	
@@ -242,6 +242,20 @@ public class Board {
 	{
 		GamePiece curPiece = player.getPiece(pieceID);
 		Location newLoc = GetLocationByLabel(locLabel);
+		
+		if (curPiece == null || newLoc == null)
+		{
+			JOptionPane.showMessageDialog(this.mw, "Invalid piece id or location label");
+			return false;
+		}
+
+		// Make sure piece selection isn't placed already.
+		if (curPiece.getStatus() != GamePiece.UNPLACED)
+		{
+			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is already placed or dead");
+			return false;
+		}
+
 				
 		// Make sure the location is empty
 		if (!newLoc.ContainsPiece(null))
@@ -275,6 +289,19 @@ public class Board {
 		Location curLoc = GetPieceLocation(curPiece);
 		Location newLoc = GetLocationByLabel(locLabel);
 		
+		if (curPiece == null || newLoc == null)
+		{
+			JOptionPane.showMessageDialog(this.mw, "Invalid piece id or location label");
+			return false;
+		}
+
+		// Make sure piece selection is placed already.
+		if (!curPiece.inPlay())
+		{
+			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is not placed nor in play");
+			return false;
+		}
+		
 		// Detect if we are in fly mode. If not, make sure we're adjacent.
 		// Make sure the locations are neighbors.
 		if (!this.cheatMode && player.getScore() > 3 && !AreNeighbors(curLoc, newLoc))
@@ -291,6 +318,7 @@ public class Board {
 		}
 		
 		// We're ok to move the piece.
+		curPiece.setStatus(GamePiece.MOVED);
 		newLoc.setPiece(curPiece);
 		curLoc.setPiece(null);
 		
@@ -324,13 +352,29 @@ public class Board {
 	public boolean RemovePiece(Player player, int pieceID)
 	{
 		GamePiece curPiece = player.getPiece(pieceID);
-		Location curLoc = GetPieceLocation(curPiece);	
+		Location curLoc = GetPieceLocation(curPiece);
 		
-		// We're ok to remove the piece. Change to movement phase.
+		if (curPiece == null)
+		{
+			JOptionPane.showMessageDialog(this.mw, "Invalid Piece ID - Piece not found");
+			return false;
+		}
+			
+		if (!curPiece.inPlay())
+		{
+			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is not placed or alive/in play");
+			return false;
+		}
+		
+		if (player.getScore() > 3 && IsMill(curLoc))
+		{
+			JOptionPane.showMessageDialog(this.mw, "You cannot remove a member of a mill");
+			return false;
+		}
+		
+		
 		curLoc.setPiece(null);
 		curPiece.setStatus(GamePiece.DEAD);
-		
-		
 		// Grab the player's new calculated score.
 		int score = player.getScore();
 		
@@ -384,19 +428,35 @@ public class Board {
 	private int CountAdjacent(Location loc, int dir)
 	{
 		Player owner = loc.getPiece().getOwner();
-		
+		int status1, status2;
+
 		ArrayList<Location> nghbrs = SomeNeighbors(loc, dir, owner);
 		if (nghbrs.size() == 2)
-			return 3;
-		else if (nghbrs.size() == 1)
 		{
+			// Store the neighbors status's to make sure at least one has moved (req to become a mill)
+			status1 = nghbrs.get(0).getPiece().getStatus();
+			status2 = nghbrs.get(1).getPiece().getStatus();	
+
+		} else if (nghbrs.size() == 1) {
+			status1 = nghbrs.get(0).getPiece().getStatus();
+
 			// See if the neighbor has another adjacent neighbor.
-			if(SomeNeighbors(nghbrs.get(0), dir, owner).size() == 2)
-				return 3;
-			
-			return 2;
-		}
-		return 1;
+			nghbrs = SomeNeighbors(nghbrs.get(0), dir, owner);
+			nghbrs.remove(loc);
+
+			if(nghbrs.size() == 1)
+			{
+				status2 = nghbrs.get(0).getPiece().getStatus();
+			} else
+				return 0;
+		} else
+			return 0;
+
+		// Make sure at least one piece of the mill has moved.
+		if (status1 == GamePiece.MOVED || status2 == GamePiece.MOVED || loc.getPiece().getStatus() == GamePiece.MOVED)
+			return 3;
+		else
+			return 0;
 		
 	}
 	
@@ -425,13 +485,13 @@ public class Board {
 		ArrayList<Location> NeighborList = new ArrayList<Location>();
 		Edge curEdge;
 		Location oppLoc;
-		
+
 		// Find all edges that hold this location
 		for (int i=0; i < edge_list.size(); i++)
 		{
 			curEdge = edge_list.get(i);
 			oppLoc = curEdge.GetOpposite(loc);
-			
+	
 			// If the edge has the location, add the adjacent location to the list.
 			// Make sure it matches directional and player owned conditions.
 			if (curEdge.HasLocation(loc) && curEdge.GetAlignment() == dir)
@@ -443,10 +503,10 @@ public class Board {
 				// We want there to be a piece in the location owned by a particular owner.
 				else if(oppLoc.getPiece() != null && oppLoc.getPiece().getOwner() == owner)
 					NeighborList.add(curEdge.GetOpposite(loc));
-					
+	
 			}
 		}
-		
+
 		return NeighborList;
 	}
 	

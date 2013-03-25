@@ -130,15 +130,15 @@ public class NewPVP extends JPanel{
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "    Enter a valid name for Player 2\r\n (Must be longer than 1 character)");
 			return;
 		}
-		if(this.getP1Color() == this.getP2Color()){
+		if(this.getP1Color().toLowerCase().equalsIgnoreCase(this.getP2Color())){
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose seperate colors for each player");
 			return;
 		}
-		if(this.getP1Color().toLowerCase() == "white"){
+		if(this.getP1Color().toLowerCase().equalsIgnoreCase("white")){
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than white");
 			return;
 		}
-		if(this.getP2Color().toLowerCase() == "white"){
+		if(this.getP2Color().toLowerCase().equalsIgnoreCase("white")){
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than white");
 			return;
 		}
