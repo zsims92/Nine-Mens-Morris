@@ -88,12 +88,13 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
 				else if(gameBoard[r][c].getSelected()){
             		g.setColor(gameBoard[r][c].getColor());
             		g.fillOval(x+10, y+10, CELL_SIZE-20, CELL_SIZE-20);
+            		
             		Glow gl = gameBoard[r][c].getGl();
             		gl.update();
             		int newx = gl.getX();
             		int newy = gl.getY();
-            		Color color = gl.getColor();
-            		g.setColor(color);
+            		
+            		g.setColor(gl.getColor());
             		g.fillOval(x+newx, y+newy, CELL_SIZE-(newx*2), CELL_SIZE-(newy*2));
 				}
 				else{
