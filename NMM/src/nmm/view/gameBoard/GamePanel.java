@@ -19,6 +19,7 @@ import nmm.controller.NMMGameModel;
 import nmm.model.Board;
 import nmm.model.GamePiece;
 import nmm.model.Glow;
+import nmm.model.Movement;
 
 public class GamePanel extends JPanel implements MouseListener, ActionListener{
 
@@ -29,7 +30,7 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
 	private static final long serialVersionUID = 9076559530700021419L;
 	private static final int ROWS = 7;
 	private static final int COLS = 7;
-	private static final int CELL_SIZE = 100;
+	public static final int CELL_SIZE = 100;
 	private BufferedImage board;
 	private NMMGameModel gameModel;
 	private GameBoard gb;
@@ -79,12 +80,24 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
             for (int c=0; c<COLS; c++) {
             	int x = c * CELL_SIZE+25;
             	int y = r * CELL_SIZE+25;
-            	
-            	//Represents p1 piece
+
 				if(gameBoard[r][c] == null || gameBoard[r][c].getID() == -1){
 					continue;
             	}
-            	//Represents p2 piece
+				
+				else if(gameBoard[r][c].isMoving()){
+					Movement mv = gameBoard[r][c].getMv();
+					if(!mv.update()){
+						g.setColor(gameBoard[r][c].getColor());
+	            		g.fillOval((int)mv.getCurX()+10, (int)mv.getCurY()+10, CELL_SIZE-20, CELL_SIZE-20);
+					}
+					else{
+						this.gameModel.getBoard().setPiece(r, c, gameBoard[r][c]);
+						gameBoard[r][c].setMoving(false);
+						this.gameModel.setMoving(false);
+					}
+				}
+				
 				else if(gameBoard[r][c].getSelected()){
             		g.setColor(gameBoard[r][c].getColor());
             		g.fillOval(x+10, y+10, CELL_SIZE-20, CELL_SIZE-20);
@@ -96,7 +109,9 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
             		
             		g.setColor(gl.getColor());
             		g.fillOval(x+newx, y+newy, CELL_SIZE-(newx*2), CELL_SIZE-(newy*2));
+            			
 				}
+				
 				else{
 					g.setColor(gameBoard[r][c].getColor());
         			g.fillOval(x+10, y+10, CELL_SIZE-20, CELL_SIZE-20);

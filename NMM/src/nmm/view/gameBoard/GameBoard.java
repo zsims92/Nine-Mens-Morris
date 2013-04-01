@@ -115,5 +115,13 @@ public class GameBoard extends JPanel{
 		this.p1.repaint();
 		this.p2.repaint();
 		this.gp.repaint();
+		
+		int steps = 0;
+		while(this.gameModel.isMoving() && steps < 10){
+			this.gp.repaint();
+			steps++;
+		}
+		
+		this.gp.repaint();
 	}
 }

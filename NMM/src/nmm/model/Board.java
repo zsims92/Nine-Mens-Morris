@@ -319,6 +319,9 @@ public class Board {
 		
 		// We're ok to move the piece.
 		curPiece.setStatus(GamePiece.MOVED);
+		curPiece.setMv(new Movement(curLoc, newLoc));
+		curPiece.setMoving(true);
+		
 		newLoc.setPiece(curPiece);
 		curLoc.setPiece(null);
 		
@@ -653,6 +656,13 @@ public class Board {
 		}
 		
 		return count;
+	}
+
+	public void setPiece(int r, int c, GamePiece gp) {
+		if(gp == null)
+			this.boardArray[r][c] = null;
+		else
+			this.boardArray[r][c] = gp;
 	}
 
 }

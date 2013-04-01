@@ -63,6 +63,12 @@ public class Location implements Comparable<Location> {
 	public void setLabel(String label) {
 		this.label = label;
 	}
+	
+	public boolean equal(char Label){
+		if(this.label.charAt(0) == Label)
+			return true;
+		return false;
+	}
 
 	/***
 	 * Returns the piece at the location

@@ -2,11 +2,16 @@ package nmm.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -79,6 +84,15 @@ public class MainWindow extends JFrame{
         cards.show(cardPanel, "WelcomeScreen");
 	        
 		this.add(cardPanel);
+		
+		BufferedImage Icon = null;
+		try {
+			Icon = ImageIO.read(new File("resources\\taskBarIcon.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		};
+		
+		this.setIconImage(Icon);
 		this.setSize(900,900);
 		this.setLocation(100,20);
 		this.setResizable(false);

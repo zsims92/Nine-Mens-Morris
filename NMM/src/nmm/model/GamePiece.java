@@ -12,6 +12,8 @@ public class GamePiece implements Comparable<GamePiece>
 	private int id;
 	private boolean selected;
 	private Glow gl;
+	private boolean moving;
+	private Movement mv;
 	
 	public static final int UNPLACED = 0;
 	public static final int PLACED = 1;
@@ -142,5 +144,24 @@ public class GamePiece implements Comparable<GamePiece>
 
 	public Glow getGl() {
 		return gl;
+	}
+
+	public boolean isMoving() {
+		return moving;
+	}
+
+	public void setMoving(boolean moving) {
+		this.moving = moving;
+	}
+
+	public Movement getMv() {
+		return mv;
+	}
+
+	public void setMv(Movement mv) {
+		if(mv == null)
+			this.mv = null;
+		else
+			this.mv = mv;
 	}
 }

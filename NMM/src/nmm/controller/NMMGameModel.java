@@ -17,6 +17,7 @@ public class NMMGameModel {
 	private Player Loser;
 	private Integer gameMode = -1;
 	private GamePiece pieceSelected;
+	private boolean moving;
 	
 	/**
 	* Constructor for the GameModel
@@ -111,6 +112,7 @@ public class NMMGameModel {
 						nextPlayer();
 						this.pieceSelected.select(false);
 						this.pieceSelected = null;
+						this.moving = true;
 					}else{
 						if(this.currBoard.GetCurrentPhase(this.curPlayer) == Board.REMOVAL_PHASE){
 							this.pieceSelected.select(false);
@@ -327,5 +329,13 @@ public class NMMGameModel {
 		else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.REMOVAL_PHASE)
 			return "remove one of your opponents pieces";
 		return "";
+	}
+
+	public boolean isMoving() {
+		return this.moving;
+	}
+	
+	public void setMoving(boolean mov){
+		this.moving = mov;
 	}
 }
