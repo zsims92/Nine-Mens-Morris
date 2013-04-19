@@ -3,6 +3,7 @@ package nmm.controller;
 import nmm.model.Board;
 import nmm.model.GamePiece;
 import nmm.model.Location;
+import nmm.model.user.AIPlayer;
 import nmm.model.user.Player;
 
 import nmm.view.MainWindow;
@@ -12,6 +13,7 @@ public class NMMGameModel {
 	private Board currBoard;
 	private Player p1;
 	private Player p2;
+	private AIPlayer comp;
 	private Player curPlayer;
 	private Player Victor;
 	private Player Loser;
@@ -39,7 +41,14 @@ public class NMMGameModel {
 		this.oldBoard = new Board(mw);
 		this.currBoard = new Board(oldBoard);
 		this.p1 = p1;
-		this.p2 = p2;
+		if(this.gameMode == 0){
+			this.comp = (AIPlayer) p2;
+			this.comp.setNmm(this);
+			this.p2 = p2;
+		}
+		else
+			this.p2 = p2;
+		
 		double t;
 		t = Math.random() * 50;
 		if(t <= 25.000)
@@ -84,9 +93,13 @@ public class NMMGameModel {
 	*/
 	public boolean newMove(String label) {
 		int gamephase = this.currBoard.GetCurrentPhase(this.curPlayer);
-		
 		if(gamephase == Board.GAMEOVER_PHASE){
 			return true;
+		}
+		if(this.currBoard.numMovesAvailable(this.curPlayer) <= 0 && gamephase != Board.PLACEMENT_PHASE){
+			this.Victor = this.inactivePlayer();
+			this.Loser = this.curPlayer;
+			this.currBoard.SetCurrentPhase(Board.GAMEOVER_PHASE);
 		}
 		switch(gamephase)
 		{
@@ -148,6 +161,44 @@ public class NMMGameModel {
 		return true;
 	}
 	
+	/***
+	 * Used to determine what type of move the AI should take
+	 * based off of the current phase of the game
+	 * @return
+	 */
+	public boolean newAIMove() {
+		if(this.curPlayer.isHuman())
+			return false;
+		AIPlayer p = (AIPlayer) this.curPlayer;
+		
+		int gamephase = this.currBoard.GetCurrentPhase(this.curPlayer);
+		if(gamephase == Board.GAMEOVER_PHASE){
+			return true;
+		}
+		boolean success = true;
+		switch(gamephase)
+		{
+			case Board.PLACEMENT_PHASE:
+				success = p.placeMove();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				break;
+			case Board.MOVEMENT_PHASE:
+				success = p.moveMove();
+				break;
+			case Board.REMOVAL_PHASE:
+				success = p.remoMove();
+				break;
+			default:
+				System.out.println("Invalid movement phase");
+				break;
+		}
+		this.currBoard.updateBoard();
+		return success;
+	}
 	
 	/***
 	* Will select the current piece and update its
@@ -337,5 +388,14 @@ public class NMMGameModel {
 	
 	public void setMoving(boolean mov){
 		this.moving = mov;
+	}
+
+	public void setSelected(GamePiece p) {
+		this.pieceSelected = p;
+	}
+
+	public void clearSelected() {
+		this.pieceSelected = null;
+		
 	}
 }

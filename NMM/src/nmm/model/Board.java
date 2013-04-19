@@ -21,6 +21,7 @@ public class Board {
 	private MainWindow mw;
 	private int current_phase;
 	private boolean cheatMode;
+	private boolean ignoreMessages;
 
 	// Game phases
 	public static final int GAMEOVER_PHASE = -1;
@@ -116,7 +117,11 @@ public class Board {
 	 * @return
 	 */
 	public int GetCurrentPhase(Player curplayer) {
-		// See if there are pieces yet to be placed.
+		if(!curplayer.isHuman()){
+			this.ignoreMessages = true;
+		}
+		else
+			this.ignoreMessages = false;
 		if (curplayer.getPiecesPlayed() < 9)
 			return PLACEMENT_PHASE;
 
@@ -225,7 +230,12 @@ public class Board {
 	/**************************************
 	 * Gameplay Related Methods
 	 **************************************/
-	
+	public boolean newMessageDialog(String error){
+		if(this.ignoreMessages)
+			return false;
+		JOptionPane.showMessageDialog(this.mw, error);
+		return false;
+	}
 	
 	/***
 	 * This function will attempt
@@ -245,23 +255,20 @@ public class Board {
 		
 		if (curPiece == null || newLoc == null)
 		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid piece id or location label");
-			return false;
+			return newMessageDialog("Invalid piece id or location label");
 		}
 
 		// Make sure piece selection isn't placed already.
 		if (curPiece.getStatus() != GamePiece.UNPLACED)
 		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is already placed or dead");
-			return false;
+			return newMessageDialog("Invalid Piece - It is already placed or dead");
 		}
 
 				
 		// Make sure the location is empty
 		if (!newLoc.ContainsPiece(null))
 		{
-			JOptionPane.showMessageDialog(this.mw, "There is a piece there already");
-			return false;
+			return newMessageDialog("There is a piece there already");
 		}
 		
 		// We're ok to place the piece.
@@ -291,30 +298,20 @@ public class Board {
 		
 		if (curPiece == null || newLoc == null)
 		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid piece id or location label");
-			return false;
-		}
-
-		// Make sure piece selection is placed already.
-		if (!curPiece.inPlay())
-		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is not placed nor in play");
-			return false;
+			return newMessageDialog("Invalid piece id or location label");
 		}
 		
 		// Detect if we are in fly mode. If not, make sure we're adjacent.
 		// Make sure the locations are neighbors.
 		if (!this.cheatMode && player.getScore() > 3 && !AreNeighbors(curLoc, newLoc))
 		{
-			JOptionPane.showMessageDialog(this.mw, "That spot is not adjacent");
-			return false;
+			return newMessageDialog("That spot is not adjacent");
 		}
 		
 		// Make sure the location is empty
 		if (!newLoc.ContainsPiece(null))
 		{
-			JOptionPane.showMessageDialog(this.mw, "There is a piece there already");
-			return false;
+			return newMessageDialog("There is a piece there already");
 		}
 		
 		// We're ok to move the piece.
@@ -359,20 +356,19 @@ public class Board {
 		
 		if (curPiece == null)
 		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Piece ID - Piece not found");
-			return false;
+			return newMessageDialog("Invalid Piece ID - Piece not found");
 		}
 			
 		if (!curPiece.inPlay())
 		{
-			JOptionPane.showMessageDialog(this.mw, "Invalid Piece - It is not placed or alive/in play");
-			return false;
+			return newMessageDialog("Invalid Piece - It is not placed or alive/in play");
+
 		}
 		
 		if (player.getScore() > 3 && IsMill(curLoc))
 		{
-			JOptionPane.showMessageDialog(this.mw, "You cannot remove a member of a mill");
-			return false;
+			return newMessageDialog("You cannot remove a member of a mill");
+
 		}
 		
 		
@@ -409,7 +405,7 @@ public class Board {
 	 * @param loc
 	 * @return
 	 */
-	private boolean IsMill(Location loc)
+	public boolean IsMill(Location loc)
 	{
 		int vertCount = CountAdjacent(loc, 0);
 		int horizCount = CountAdjacent(loc, 1);
@@ -428,7 +424,7 @@ public class Board {
 	 * @param dir
 	 * @return
 	 */
-	private int CountAdjacent(Location loc, int dir)
+	public int CountAdjacent(Location loc, int dir)
 	{
 		Player owner = loc.getPiece().getOwner();
 		int status1, status2;
@@ -470,7 +466,7 @@ public class Board {
 	 * @param loc2
 	 * @return
 	 */
-	private boolean AreNeighbors(Location loc1, Location loc2)
+	public boolean AreNeighbors(Location loc1, Location loc2)
 	{
 		ArrayList<Location> all_neighbors = AllNeighbors(loc1);
 		if (all_neighbors.contains(loc2))
@@ -483,7 +479,7 @@ public class Board {
 	 *  Returns locations with a defined direction and a owner that
 	 *  are neighbors to the supplied location.
 	 */
-	private ArrayList<Location> SomeNeighbors(Location loc, int dir, Player owner)
+	public ArrayList<Location> SomeNeighbors(Location loc, int dir, Player owner)
 	{
 		ArrayList<Location> NeighborList = new ArrayList<Location>();
 		Edge curEdge;
@@ -519,7 +515,7 @@ public class Board {
 	 * @param loc
 	 * @return
 	 */
-	private ArrayList<Location> AllNeighbors(Location loc)
+	public ArrayList<Location> AllNeighbors(Location loc)
 	{
 		ArrayList<Location> NeighborList = new ArrayList<Location>();
 		
@@ -663,6 +659,15 @@ public class Board {
 			this.boardArray[r][c] = null;
 		else
 			this.boardArray[r][c] = gp;
+	}
+
+	public boolean isFlyMode(Player p) {
+		int score = p.getScore();
+		
+		if (score == 3 || this.cheatMode){
+			return true;
+		}
+		return false;
 	}
 
 }

@@ -61,7 +61,7 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
          this.setBackground(Color.WHITE);
          this.addMouseListener(this);
          
-         int delay = 75;
+         int delay = 10;
          new Timer(delay, this).start();
 	}	
 	
@@ -130,7 +130,10 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent arg0) {       
+		if(!this.gameModel.getCurrPlayer().isHuman() && !this.gameModel.isMoving()){
+        	this.gameModel.newAIMove();
+        }
 		this.revalidate();
 		this.gb.repaint();
 	}	
@@ -143,7 +146,7 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
 	 * If invalid return and wait
 	 * for a valid click
 	 * 
-	 * Else determine if valed spot
+	 * Else determine if valid spot
 	 */
 	public void mouseClicked(MouseEvent e) {
 		int col = e.getX()/CELL_SIZE;
@@ -151,8 +154,9 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
         if(row < 0 || col < 0 || row > 6 || col > 6)
         	return;
         
-        if(!this.convertToLabel(row, col))
+        if(!this.convertToLabel(row, col) && this.gameModel.getCurrPlayer().isHuman()){
         	return;
+        }
         
         this.revalidate();
         this.gb.repaint();
