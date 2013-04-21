@@ -35,6 +35,7 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
 	private NMMGameModel gameModel;
 	private GameBoard gb;
 	
+	
 	/***
 	 * Constructor for gamePanel
 	 * 
@@ -61,7 +62,7 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
          this.setBackground(Color.WHITE);
          this.addMouseListener(this);
          
-         int delay = 10;
+         int delay = 20;
          new Timer(delay, this).start();
 	}	
 	
@@ -104,8 +105,8 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
             		
             		Glow gl = gameBoard[r][c].getGl();
             		gl.update();
-            		int newx = gl.getX();
-            		int newy = gl.getY();
+            		int newx = (int) gl.getX();
+            		int newy = (int) gl.getY();
             		
             		g.setColor(gl.getColor());
             		g.fillOval(x+newx, y+newy, CELL_SIZE-(newx*2), CELL_SIZE-(newy*2));
@@ -130,7 +131,7 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {       
+	public void actionPerformed(ActionEvent arg0) {
 		if(!this.gameModel.getCurrPlayer().isHuman() && !this.gameModel.isMoving()){
         	this.gameModel.newAIMove();
         }

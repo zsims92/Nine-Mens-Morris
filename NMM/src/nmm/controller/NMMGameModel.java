@@ -38,8 +38,7 @@ public class NMMGameModel {
 	*/
 	public NMMGameModel(Integer mode, Player p1, Player p2, MainWindow mw){
 		this.gameMode = mode;
-		this.oldBoard = new Board(mw);
-		this.currBoard = new Board(oldBoard);
+		this.currBoard = new Board(mw);
 		this.p1 = p1;
 		if(this.gameMode == 0){
 			this.comp = (AIPlayer) p2;
@@ -373,12 +372,22 @@ public class NMMGameModel {
 	* @return
 	*/
 	public String getPhaseText() {
-		if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.PLACEMENT_PHASE)
-			return "place a piece on the board";
-		else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.MOVEMENT_PHASE)
-			return "move one of your pieces on the board";
-		else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.REMOVAL_PHASE)
-			return "remove one of your opponents pieces";
+		if(this.gameMode == 0 && !this.curPlayer.isHuman()){
+			if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.PLACEMENT_PHASE)
+				return "The computer is placing a piece on the board";
+			else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.MOVEMENT_PHASE)
+				return "The computer is moving a piece on the board";
+			else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.REMOVAL_PHASE)
+				return "The computer is removing on of your pieces";
+		}
+		else{
+			if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.PLACEMENT_PHASE)
+				return "place a piece on the board";
+			else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.MOVEMENT_PHASE)
+				return "move one of your pieces on the board";
+			else if(this.currBoard.GetCurrentPhase(this.getCurrPlayer()) == Board.REMOVAL_PHASE)
+				return "remove one of your opponents pieces";
+		}
 		return "";
 	}
 

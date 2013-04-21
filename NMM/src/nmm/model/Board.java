@@ -44,15 +44,38 @@ public class Board {
 	 * @param bd
 	 */
 	public Board(Board bd){
-		//TODO:	Fix this to copy correctly
-		location_list = bd.location_list;
-		edge_list = bd.edge_list;
-		current_phase = bd.current_phase;
-		boardArray = bd.boardArray;
-		cheatMode = bd.cheatMode;
-		mw = bd.mw;
+		this.location_list = new ArrayList<Location>();
+		this.edge_list = new ArrayList<Edge>();
+		this.boardArray = new GamePiece[7][7];
+		this.current_phase = bd.current_phase;
+		this.cheatMode = bd.cheatMode;
+		this.mw = bd.mw;
+		
+		copyLocList(bd);
+		copyEdgList(bd);
+		copyBoardAr(bd);
 	}
 	
+	private void copyBoardAr(Board bd) {
+		for(int i=0; i<7; i++){
+			for(int j=0; j<7; j++){
+				this.boardArray[i][j] = new GamePiece(bd.boardArray[i][j]);
+			}
+		}
+	}
+
+	private void copyEdgList(Board bd) {
+		for(Location l: bd.location_list){
+			this.location_list.add(new Location(l));
+		}
+	}
+
+	private void copyLocList(Board bd) {
+		for(Edge e: bd.edge_list){
+			this.edge_list.add(new Edge(e));
+		}
+	}
+
 	/***
 	 * The normal constructor for the
 	 * Board class.  The MainWindow param
@@ -233,7 +256,8 @@ public class Board {
 	public boolean newMessageDialog(String error){
 		if(this.ignoreMessages)
 			return false;
-		JOptionPane.showMessageDialog(this.mw, error);
+		this.mw.getGameBoard().setError(error);
+		this.mw.getGameBoard().startTimer();
 		return false;
 	}
 	

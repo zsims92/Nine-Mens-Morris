@@ -364,7 +364,7 @@ public class MainWindow extends JFrame{
 		this.gb = new GameBoard(nmm, this);
 		cardPanel.add(this.gb, "GameBoard");
 		this.changeCard("GameBoard");
-		this.setSize(900,900);
+		this.setSize(925,925);
 		this.setLocation(100,20);
 	}
 	
@@ -379,5 +379,10 @@ public class MainWindow extends JFrame{
 		this.setLocationRelativeTo(null);
 		this.setSize(900,900);
 		this.setLocation(100,20);
+	}
+
+	public GameBoard getGameBoard() {
+		// TODO Auto-generated method stub
+		return this.gb;
 	}
 }

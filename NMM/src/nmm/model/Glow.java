@@ -3,8 +3,8 @@ package nmm.model;
 import java.awt.Color;
 
 public class Glow {
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	private Color c;
 	private boolean decreasing;
 	
@@ -15,11 +15,11 @@ public class Glow {
 		this.decreasing = true;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
@@ -30,12 +30,12 @@ public class Glow {
 	public void update() {
 		checkDirection();
 		if(this.decreasing){
-			this.x--;
-			this.y--;
+			this.x -= .2;
+			this.y -= .2;
 		}
 		else{
-			this.x++;
-			this.y++;
+			this.x += .2;
+			this.y += .2;
 		}
 	}
 

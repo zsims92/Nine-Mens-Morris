@@ -3,15 +3,18 @@ package nmm.view.gameBoard;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import nmm.controller.NMMGameModel;
 import nmm.model.Board;
 import nmm.view.MainWindow;
 
-public class GameBoard extends JPanel{
+public class GameBoard extends JPanel implements ActionListener{
 
 	/**
 	 * GameBoard display
@@ -28,8 +31,10 @@ public class GameBoard extends JPanel{
 	private JLabel p1Score;
 	private JLabel p2Score;
 	private JLabel currentPlayer;
+	private JLabel error;
 	private JPanel topPanel;
 	private JPanel scorePanel;
+	private Timer timer;
 	
 	/***
 	 * The constructor for the GameBoard
@@ -59,24 +64,29 @@ public class GameBoard extends JPanel{
 		p1Score = new JLabel("Score: " + String.valueOf(this.gameModel.getPlayer1().getScore()));
 		p2Score = new JLabel("Score: " + String.valueOf(this.gameModel.getPlayer1().getScore()));
 		currentPlayer = new JLabel(this.gameModel.getCurrPlayer().getName() + ", " + this.gameModel.getPhaseText());
+		error = new JLabel("               ");
 		
 		p1Name.setFont(new java.awt.Font("Times New Roman", 0, 18));
 		p2Name.setFont(new java.awt.Font("Times New Roman", 0, 18));
 		currentPlayer.setFont(new java.awt.Font("Times New Roman", 0, 30));
+		error.setFont(new java.awt.Font("Times New Roman", 0, 18));
 		p1Name.setHorizontalAlignment(JLabel.CENTER);
 		currentPlayer.setHorizontalAlignment(JLabel.CENTER);
 		p2Name.setHorizontalAlignment(JLabel.CENTER);
 		p1Score.setHorizontalAlignment(JLabel.CENTER);
 		p2Score.setHorizontalAlignment(JLabel.CENTER);
+		error.setHorizontalAlignment(JLabel.CENTER);
 	
 		this.topPanel.setLayout(new BorderLayout());
 		this.topPanel.add(this.p1Name, BorderLayout.WEST);
 		this.topPanel.add(this.p2Name, BorderLayout.EAST);
 		this.topPanel.add(this.currentPlayer, BorderLayout.CENTER);
 		
+		
 		this.scorePanel.setLayout(new BorderLayout());
 		this.scorePanel.add(p1Score, BorderLayout.WEST);
 		this.scorePanel.add(p2Score, BorderLayout.EAST);
+		this.scorePanel.add(this.error, BorderLayout.CENTER);
 		this.topPanel.add(this.scorePanel, BorderLayout.SOUTH);
 		
 		this.topPanel.setBackground(Color.WHITE);
@@ -89,6 +99,9 @@ public class GameBoard extends JPanel{
 		this.add(this.p2, BorderLayout.EAST);
 		
 		this.setVisible(true);
+		
+		int delay = 1500;
+        this.timer = new Timer(delay, this);
 	}
 	
 	@Override
@@ -107,7 +120,11 @@ public class GameBoard extends JPanel{
 			this.mw.showEnd();
 		}
 		
-		this.currentPlayer.setText(this.gameModel.getCurrPlayer().getName() + ", " + this.gameModel.getPhaseText());
+		
+		if(this.gameModel.getCurrPlayer().isHuman())
+			this.currentPlayer.setText(this.gameModel.getCurrPlayer().getName() + ", " + this.gameModel.getPhaseText());
+		else
+			this.currentPlayer.setText(this.gameModel.getPhaseText());
 
 		this.p1Score.setText("Score: " + String.valueOf(this.gameModel.getPlayer1().getScore()));
 		this.p2Score.setText("Score: " + String.valueOf(this.gameModel.getPlayer2().getScore()));
@@ -123,5 +140,20 @@ public class GameBoard extends JPanel{
 		}
 		
 		this.gp.repaint();
+	}
+	
+	
+	public void setError(String s){
+		this.error.setText(s);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		this.error.setText("                 ");
+		this.timer.stop();
+	}
+	
+	public void startTimer(){
+		this.timer.start();
 	}
 }

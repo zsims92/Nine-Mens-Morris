@@ -47,6 +47,14 @@ public class GamePiece implements Comparable<GamePiece>
 		this.gl = new Glow();
 	}
 	
+	public GamePiece(GamePiece gamePiece) {
+		this.color = gamePiece.color;
+		this.owner = gamePiece.owner;
+		this.status = gamePiece.status;
+		this.id = gamePiece.id;
+		this.gl = gamePiece.gl;		
+	}
+
 	/***
 	 * returns the boolean
 	 * of whether the piece is selected

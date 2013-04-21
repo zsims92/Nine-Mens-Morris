@@ -34,6 +34,10 @@ public class Edge implements Comparable<Edge>
 		alignment = align;
 	}
 	
+	public Edge(Edge e) {
+		// TODO Auto-generated constructor stub
+	}
+
 	/***
 	 * Returns the edges label
 	 * @return

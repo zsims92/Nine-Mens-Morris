@@ -25,6 +25,10 @@ public class Location implements Comparable<Location> {
 		piece = null;
 	}
 
+	public Location(Location l) {
+		this.label = l.label;
+	}
+
 	/***
 	 * returns the locations label
 	 * @return

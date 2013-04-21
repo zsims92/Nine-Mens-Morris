@@ -33,8 +33,9 @@ public class AIPlayer extends Player {
 		int i = R.nextInt() % 12;
 		while(i < 0 || i > 11)
 			i = R.nextInt() % 12;
-		if(AIPlayer.colors[i] != null)
-				return AIPlayer.colors[i];
+		if(AIPlayer.colors[i] != null){
+			return AIPlayer.colors[i];
+		}
 		return color;
 	}
 	

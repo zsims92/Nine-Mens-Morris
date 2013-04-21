@@ -2,6 +2,7 @@ package nmm.view.newGame;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.lang.reflect.Field;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -101,7 +102,7 @@ public class NewPVE extends JPanel {
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Enter a color for Player 1");
 			return;
 		}
-		if(this.getP1Color().equalsIgnoreCase(this.ngs.getComputer().getColor().toString())){
+		if(getColor(this.getP1Color()).equals(this.ngs.getComputer().getColor())){
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than what the computer chose");
 			return;
 		}
@@ -138,6 +139,18 @@ public class NewPVE extends JPanel {
 			return 1;
 		}
 		return 0;
+	}
+	
+	public Color getColor(String color){
+		Color c = null;	
+		try {
+		    Field field = Color.class.getField(color.toLowerCase());
+		    c = (Color)field.get(null);
+		} catch (Exception e) {
+		    c = null; // Not defined
+		}
+		
+		return c;
 	}
 
 	/***
