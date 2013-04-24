@@ -9,7 +9,7 @@ import nmm.model.Location;
 
 public class AIPlayer extends Player {
 	
-	public static final String[] colors = {"black", "red", "yellow", "blue", "cyan", "darkGray", "gray", "green", "lightGray", "magenta", "orange", "pink"};
+	public static final String[] colors = {"Black", "Red", "Yellow", "Blue", "Cyan", "Gray", "Green", "Magenta", "Orange", "Pink"};
 	private NMMGameModel nmm;
 	public static Random R;
 	/***
@@ -30,11 +30,11 @@ public class AIPlayer extends Player {
 	 */
 	private static String chooseRandomColor(String color) {
 		R = new Random();
-		int i = R.nextInt() % 12;
-		while(i < 0 || i > 11)
-			i = R.nextInt() % 12;
+		int i = R.nextInt() % 10;
+		while(i < 0 || i > 9)
+			i = R.nextInt() % 10;
 		if(AIPlayer.colors[i] != null){
-			return AIPlayer.colors[i];
+			return AIPlayer.colors[i].toLowerCase();
 		}
 		return color;
 	}

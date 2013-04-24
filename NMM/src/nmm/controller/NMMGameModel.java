@@ -9,7 +9,6 @@ import nmm.model.user.Player;
 import nmm.view.MainWindow;
 
 public class NMMGameModel {
-	private Board oldBoard;
 	private Board currBoard;
 	private Player p1;
 	private Player p2;
@@ -66,17 +65,6 @@ public class NMMGameModel {
 	*/
 	public int getStatus(){
 		return this.currBoard.GetCurrentPhase(this.curPlayer);
-	}
-	
-	/***
-	* This function will restore
-	* the board to its previous state
-	*
-	* Currently not working
-	*/
-	public void undoMove(){
-	//TODO: implement this
-		this.currBoard = new Board(this.oldBoard);
 	}
 	
 	/***

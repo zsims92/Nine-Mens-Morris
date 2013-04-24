@@ -253,10 +253,10 @@ public class Board {
 	/**************************************
 	 * Gameplay Related Methods
 	 **************************************/
-	public boolean newMessageDialog(String error){
-		if(this.ignoreMessages)
+	public boolean newMessageDialog(String error, int delay){
+		if(this.ignoreMessages && delay != 5000)
 			return false;
-		this.mw.getGameBoard().setError(error);
+		this.mw.getGameBoard().setError(error, delay);
 		this.mw.getGameBoard().startTimer();
 		return false;
 	}
@@ -279,20 +279,20 @@ public class Board {
 		
 		if (curPiece == null || newLoc == null)
 		{
-			return newMessageDialog("Invalid piece id or location label");
+			return newMessageDialog("Invalid piece id or location label", 1500);
 		}
 
 		// Make sure piece selection isn't placed already.
 		if (curPiece.getStatus() != GamePiece.UNPLACED)
 		{
-			return newMessageDialog("Invalid Piece - It is already placed or dead");
+			return newMessageDialog("Invalid Piece - It is already placed or dead", 1500);
 		}
 
 				
 		// Make sure the location is empty
 		if (!newLoc.ContainsPiece(null))
 		{
-			return newMessageDialog("There is a piece there already");
+			return newMessageDialog("There is a piece there already", 1500);
 		}
 		
 		// We're ok to place the piece.
@@ -322,20 +322,20 @@ public class Board {
 		
 		if (curPiece == null || newLoc == null)
 		{
-			return newMessageDialog("Invalid piece id or location label");
+			return newMessageDialog("Invalid piece id or location label", 1500);
 		}
 		
 		// Detect if we are in fly mode. If not, make sure we're adjacent.
 		// Make sure the locations are neighbors.
 		if (!this.cheatMode && player.getScore() > 3 && !AreNeighbors(curLoc, newLoc))
 		{
-			return newMessageDialog("That spot is not adjacent");
+			return newMessageDialog("That spot is not adjacent", 1500);
 		}
 		
 		// Make sure the location is empty
 		if (!newLoc.ContainsPiece(null))
 		{
-			return newMessageDialog("There is a piece there already");
+			return newMessageDialog("There is a piece there already", 1500);
 		}
 		
 		// We're ok to move the piece.
@@ -353,7 +353,8 @@ public class Board {
 			// Set current phase to removal phase.
 			String s = "%s has created a mill!";
 			s = String.format(s, player.getName());
-			JOptionPane.showMessageDialog(this.mw, s);
+			this.newMessageDialog(s, 5000);
+			//JOptionPane.showMessageDialog(this.mw, s);
 			this.SetCurrentPhase(REMOVAL_PHASE);
 			return false;
 		}
@@ -380,18 +381,18 @@ public class Board {
 		
 		if (curPiece == null)
 		{
-			return newMessageDialog("Invalid Piece ID - Piece not found");
+			return newMessageDialog("Invalid Piece ID - Piece not found", 1500);
 		}
 			
 		if (!curPiece.inPlay())
 		{
-			return newMessageDialog("Invalid Piece - It is not placed or alive/in play");
+			return newMessageDialog("Invalid Piece - It is not placed or alive/in play", 1500);
 
 		}
 		
 		if (player.getScore() > 3 && IsMill(curLoc))
 		{
-			return newMessageDialog("You cannot remove a member of a mill");
+			return newMessageDialog("You cannot remove a member of a mill", 1500);
 
 		}
 		

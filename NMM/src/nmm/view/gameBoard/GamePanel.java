@@ -62,7 +62,7 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
          this.setBackground(Color.WHITE);
          this.addMouseListener(this);
          
-         int delay = 20;
+         int delay = 5;
          new Timer(delay, this).start();
 	}	
 	
@@ -152,6 +152,8 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
 	public void mouseClicked(MouseEvent e) {
 		int col = e.getX()/CELL_SIZE;
         int row = e.getY()/CELL_SIZE;
+        if(this.gameModel.isMoving())
+        	return;
         if(row < 0 || col < 0 || row > 6 || col > 6)
         	return;
         

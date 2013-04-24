@@ -46,13 +46,11 @@ public class MainWindow extends JFrame{
 	private JMenuBar jMenuBar1;
 	  
 	private JMenu jMenu1;
-	private JMenu jMenu2;
 	private JMenu jMenu3;
 	
 	private JMenuItem jMenuItem1;
 	private JMenuItem jMenuItem2;
 	private JMenuItem jMenuItem3;
-	private JMenuItem jMenuItem4;
 	private JMenuItem jMenuItem5;
 	private JMenuItem jMenuItem6;
 	private JMenuItem jMenuItem7;
@@ -107,21 +105,17 @@ public class MainWindow extends JFrame{
         jMenuItem1 = new JMenuItem();
         jMenuItem2 = new JMenuItem();
         jMenuItem3 = new JMenuItem();
-        jMenu2 = new JMenu();
-        jMenuItem4 = new JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem5 = new JMenuItem();
         jMenuItem6 = new JMenuItem();
         jMenuItem7 = new JMenuItem();
            
         jMenu1.setText("File");
-        jMenu2.setText("Edit");
         jMenu3.setText("Help");
 
         jMenuItem1.setText("New Game");
         jMenuItem2.setText("Cheat Mode");
         jMenuItem3.setText("Quit");
-        jMenuItem4.setText("Undo");
         jMenuItem5.setText("How to Play");
         jMenuItem6.setText("About");
         jMenuItem7.setText("Color options");
@@ -139,11 +133,6 @@ public class MainWindow extends JFrame{
         jMenuItem2.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent evt){
         		cheatMode(evt);
-        	}
-        });
-        jMenuItem4.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent evt){
-        		undo(evt);
         	}
         });
         jMenuItem5.addActionListener(new ActionListener() {
@@ -165,13 +154,11 @@ public class MainWindow extends JFrame{
         jMenu1.add(jMenuItem1);
         jMenu1.add(jMenuItem2);
         jMenu1.add(jMenuItem3);
-        jMenu2.add(jMenuItem4);
         jMenu3.add(jMenuItem5);
         jMenu3.add(jMenuItem6);
         jMenu3.add(jMenuItem7);
         
         jMenuBar1.add(jMenu1);
-        jMenuBar1.add(jMenu2);
         jMenuBar1.add(jMenu3);
 
         this.setJMenuBar(jMenuBar1);
@@ -227,24 +214,6 @@ public class MainWindow extends JFrame{
 	    }
 	    JOptionPane.showMessageDialog(this, editorPane);
     }
-
-	/***
-	 * Will confirm if a user wants
-	 * to undo their last move
-	 * 
-	 * If so, will tell the GameModel this
-	 * and then update the game Screen
-	 * @param evt
-	 */
-	private void undo(ActionEvent evt) {
-		int confirm = JOptionPane.showConfirmDialog(this, "Do you really want to undo the last move?");
-		if(confirm == 0){
-			this.nmm.undoMove();
-			this.gb.repaint();
-		}
-		else
-			return;		
-	}
 
 	/***
 	 * Will activate cheat mode for the
@@ -382,7 +351,6 @@ public class MainWindow extends JFrame{
 	}
 
 	public GameBoard getGameBoard() {
-		// TODO Auto-generated method stub
 		return this.gb;
 	}
 }

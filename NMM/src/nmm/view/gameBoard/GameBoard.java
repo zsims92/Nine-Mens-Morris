@@ -143,7 +143,8 @@ public class GameBoard extends JPanel implements ActionListener{
 	}
 	
 	
-	public void setError(String s){
+	public void setError(String s, int delay){
+		this.timer.setDelay(delay);
 		this.error.setText(s);
 	}
 
