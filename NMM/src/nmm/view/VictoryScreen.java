@@ -46,7 +46,7 @@ public class VictoryScreen extends JComponent{
 
         winnerPanel.setLayout(new java.awt.BorderLayout());
 
-        winnerText.setFont(new java.awt.Font("Traditional Arabic", 0, 48)); // NOI18N
+        winnerText.setFont(new java.awt.Font("Traditional Arabic", 0, 30)); // NOI18N
         winnerText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         String s = "Congratulations %s, Good Game";
         s = String.format(s, victor.getName());
@@ -57,7 +57,7 @@ public class VictoryScreen extends JComponent{
 
         loserPanel.setLayout(new java.awt.BorderLayout());
 
-        loserText.setFont(new java.awt.Font("Traditional Arabic", 0, 48)); // NOI18N
+        loserText.setFont(new java.awt.Font("Traditional Arabic", 0, 30)); // NOI18N
         loserText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         String t = "Sorry, %s.  Better luck next time";
         t = String.format(t, loser.getName());

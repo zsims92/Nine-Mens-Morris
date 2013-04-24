@@ -45,7 +45,7 @@ public class NewPVP extends JPanel{
         JPanel bot = new JPanel();
         startBut = new JButton();
 
-        setLayout(new java.awt.GridLayout(3, 1, 0, 250));
+        setLayout(new java.awt.GridLayout(3, 1, 500, 150));
 
         top.setLayout(new java.awt.BorderLayout());
 
@@ -114,6 +114,7 @@ public class NewPVP extends JPanel{
         });
 		
 		this.ngs = ngs;
+		this.setSize(700,700);
 	}
 	
 	/**

@@ -16,7 +16,7 @@ public class PlayerPanel extends JPanel{
 	 */
 	private static final long serialVersionUID = -3043526960369929645L;
 	private static final int COLS = 1;
-	private static final int CELL_SIZE = 77;
+	private static final int CELL_SIZE = 59;
 	private Player player;
 	
 	/***
@@ -27,7 +27,7 @@ public class PlayerPanel extends JPanel{
 		this.player = p1;
 
 		this.setPreferredSize(
-                new Dimension(CELL_SIZE * COLS, 700));
+                new Dimension(CELL_SIZE * COLS, 525));
          this.setBackground(Color.WHITE);
 	}
 

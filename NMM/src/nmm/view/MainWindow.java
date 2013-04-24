@@ -91,8 +91,8 @@ public class MainWindow extends JFrame{
 		};
 		
 		this.setIconImage(Icon);
-		this.setSize(900,900);
-		this.setLocation(100,20);
+		this.setSize(700,700);
+		this.setLocation(0,0);
 		this.setResizable(false);
 		this.setVisible(true);
 	}
@@ -345,8 +345,8 @@ public class MainWindow extends JFrame{
 		this.sd = new NewGameScreen(this, mode);
 		cardPanel.add(this.sd, "NewGameScreen");
 		this.changeCard("NewGameScreen");
-		this.setSize(900,900);
-		this.setLocation(100,20);
+		this.setSize(700,700);
+		this.setLocation(0,0);
 	}
 	
 	/***
@@ -364,8 +364,8 @@ public class MainWindow extends JFrame{
 		this.gb = new GameBoard(nmm, this);
 		cardPanel.add(this.gb, "GameBoard");
 		this.changeCard("GameBoard");
-		this.setSize(925,925);
-		this.setLocation(100,20);
+		this.setSize(700,700);
+		this.setLocation(0,0);
 	}
 	
 	/***
@@ -377,8 +377,8 @@ public class MainWindow extends JFrame{
 		cardPanel.add(this.vs, "EndGame");
 		this.changeCard("EndGame");
 		this.setLocationRelativeTo(null);
-		this.setSize(900,900);
-		this.setLocation(100,20);
+		this.setSize(700,700);
+		this.setLocation(0,0);
 	}
 
 	public GameBoard getGameBoard() {

@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
 	private static final long serialVersionUID = 9076559530700021419L;
 	private static final int ROWS = 7;
 	private static final int COLS = 7;
-	public static final int CELL_SIZE = 100;
+	public static final int CELL_SIZE = 75;
 	private BufferedImage board;
 	private NMMGameModel gameModel;
 	private GameBoard gb;

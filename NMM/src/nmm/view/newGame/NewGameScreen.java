@@ -30,7 +30,7 @@ public class NewGameScreen extends JPanel{
 	 * @param mode
 	 */
 	public NewGameScreen(MainWindow mw, Integer mode){
-		this.setSize(800,600);
+		this.setSize(700,700);
 		this.mw = mw;
 		this.mode = mode;
 		if(mode == 0){

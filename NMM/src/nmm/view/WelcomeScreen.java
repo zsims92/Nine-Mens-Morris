@@ -64,11 +64,11 @@ public class WelcomeScreen extends JComponent{
 
         bot.setLayout(new GridLayout());
 
-        pve.setFont(new Font("Traditional Arabic", 0, 48)); // NOI18N
+        pve.setFont(new Font("Traditional Arabic", 0, 35)); // NOI18N
         pve.setText("Plaver VS Computer");
         bot.add(pve);
 
-        pvp.setFont(new Font("Traditional Arabic", 0, 48)); // NOI18N
+        pvp.setFont(new Font("Traditional Arabic", 0, 35)); // NOI18N
         pvp.setText("Player VS Player");
 
         pve.addActionListener(new ActionListener() {
