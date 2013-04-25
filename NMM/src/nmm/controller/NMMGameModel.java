@@ -215,7 +215,11 @@ public class NMMGameModel {
 	*/
 	private boolean RemovalPhase(String label) {
 		Location t = this.currBoard.GetLocationByLabel(label);
-		return this.currBoard.RemovePiece(this.inactivePlayer(), t.getPiece().getID());
+		boolean v = true;
+		if(t.getPiece().getOwner() != this.inactivePlayer())
+			v = false;
+		
+		return this.currBoard.RemovePiece(this.inactivePlayer(), t.getPiece().getID(), v);
 	}
 	
 	/***

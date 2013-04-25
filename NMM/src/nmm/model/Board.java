@@ -374,10 +374,14 @@ public class Board {
 	 * @param pieceID
 	 * @return
 	 */
-	public boolean RemovePiece(Player player, int pieceID)
+	public boolean RemovePiece(Player player, int pieceID, boolean valid)
 	{
 		GamePiece curPiece = player.getPiece(pieceID);
 		Location curLoc = GetPieceLocation(curPiece);
+		
+		if(!valid)
+			return newMessageDialog("You cannot remove your own piece", 1500);
+
 		
 		if (curPiece == null)
 		{
