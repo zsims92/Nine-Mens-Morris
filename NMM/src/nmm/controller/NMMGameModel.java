@@ -87,6 +87,7 @@ public class NMMGameModel {
 			this.Victor = this.inactivePlayer();
 			this.Loser = this.curPlayer;
 			this.currBoard.SetCurrentPhase(Board.GAMEOVER_PHASE);
+			this.currBoard.newMessageDialog(this.Loser + " has no more moves available and losses the game", 1500);
 		}
 		switch(gamephase)
 		{
@@ -132,6 +133,12 @@ public class NMMGameModel {
 					if(this.currBoard.GetCurrentPhase(this.inactivePlayer()) == Board.GAMEOVER_PHASE){
 						this.Victor = this.curPlayer;
 						this.Loser = this.inactivePlayer();
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						return true;
 					}
 					else
