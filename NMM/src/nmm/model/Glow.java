@@ -30,12 +30,12 @@ public class Glow {
 	public void update() {
 		checkDirection();
 		if(this.decreasing){
-			this.x -= .2;
-			this.y -= .2;
+			this.x -= .04;
+			this.y -= .04;
 		}
 		else{
-			this.x += .2;
-			this.y += .2;
+			this.x += .04;
+			this.y += .04;
 		}
 	}
 

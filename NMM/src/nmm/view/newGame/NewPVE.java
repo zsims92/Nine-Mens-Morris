@@ -103,6 +103,9 @@ public class NewPVE extends JPanel {
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Enter a color for Player 1");
 			return;
 		}
+		int check = checkColor(this.getP1Color());
+		if(check == 1)
+			return;
 		if(getColor(this.getP1Color()).equals(this.ngs.getComputer().getColor())){
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than what the computer chose");
 			return;
@@ -111,9 +114,6 @@ public class NewPVE extends JPanel {
 			JOptionPane.showMessageDialog(this.ngs.getMainWindow(), "Please choose a different color than white");
 			return;
 		}
-		int check = checkColor(this.getP1Color());
-		if(check == 1)
-			return;
 		this.ngs.startGame();
 	}
 	

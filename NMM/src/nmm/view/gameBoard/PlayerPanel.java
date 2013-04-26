@@ -3,7 +3,6 @@ package nmm.view.gameBoard;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-
 import javax.swing.JPanel;
 
 import nmm.model.user.Player;
@@ -18,6 +17,7 @@ public class PlayerPanel extends JPanel{
 	private static final int COLS = 1;
 	private static final int CELL_SIZE = 59;
 	private Player player;
+
 	
 	/***
 	 * Constructor for player Panel
@@ -44,14 +44,13 @@ public class PlayerPanel extends JPanel{
 	 */
 	public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
         Integer pieces = 9 - this.player.getPiecesPlayed();
         for (int r=0; r<pieces; r++) {
             for (int c=0; c<COLS; c++) {
                 int x = c * CELL_SIZE;
                 int y = r * CELL_SIZE + 30;
-            	g.setColor(Color.WHITE);
-            	g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+//            	g.setColor(Color.WHITE);
+//            	g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
             	g.setColor(this.player.getColor());
             	g.fillOval(x+10, y+10, CELL_SIZE-20, CELL_SIZE-20);
             }

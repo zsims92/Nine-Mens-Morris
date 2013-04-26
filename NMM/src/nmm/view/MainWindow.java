@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +28,7 @@ import nmm.model.user.Player;
 import nmm.view.gameBoard.GameBoard;
 import nmm.view.newGame.NewGameScreen;
 
-public class MainWindow extends JFrame{
+public class MainWindow extends JFrame implements WindowListener{
 
 	/**
 	 * Main Window for
@@ -47,7 +49,7 @@ public class MainWindow extends JFrame{
 	  
 	private JMenu jMenu1;
 	private JMenu jMenu3;
-	
+	private JMenu jMenu2;
 	private JMenuItem jMenuItem1;
 	private JMenuItem jMenuItem2;
 	private JMenuItem jMenuItem3;
@@ -63,7 +65,7 @@ public class MainWindow extends JFrame{
 	 * 
 	 */
 	public MainWindow(){
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Nine Mens Morris");
         this.setSize(600,600);
 
@@ -105,12 +107,14 @@ public class MainWindow extends JFrame{
         jMenuItem1 = new JMenuItem();
         jMenuItem2 = new JMenuItem();
         jMenuItem3 = new JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
+        jMenu2 = new JMenu();
+        jMenu3 = new JMenu();
         jMenuItem5 = new JMenuItem();
         jMenuItem6 = new JMenuItem();
         jMenuItem7 = new JMenuItem();
            
         jMenu1.setText("File");
+        jMenu2.setText("Edit");
         jMenu3.setText("Help");
 
         jMenuItem1.setText("New Game");
@@ -152,13 +156,14 @@ public class MainWindow extends JFrame{
         });
         
         jMenu1.add(jMenuItem1);
-        jMenu1.add(jMenuItem2);
+        jMenu2.add(jMenuItem2);
         jMenu1.add(jMenuItem3);
         jMenu3.add(jMenuItem5);
         jMenu3.add(jMenuItem6);
         jMenu3.add(jMenuItem7);
         
         jMenuBar1.add(jMenu1);
+        jMenuBar1.add(jMenu2);
         jMenuBar1.add(jMenu3);
 
         this.setJMenuBar(jMenuBar1);
@@ -204,7 +209,7 @@ public class MainWindow extends JFrame{
 		editorPane.setEditable(false);
 		java.net.URL howToUrl = null;
 		try {
-			howToUrl = new java.net.URL("http://www.themathlab.com/games/Nine%20Man%20Morris/howtoplay.htm");
+			howToUrl = new java.net.URL("http://cse.unl.edu/~zsims/howTo.html");
 		} catch (MalformedURLException e) {
 		}
 		try {
@@ -256,6 +261,7 @@ public class MainWindow extends JFrame{
 		int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?");
 		if(confirm == 0){
 			this.dispose();
+			System.exit(NORMAL);
 		}
 		else
 			return;	
@@ -352,5 +358,48 @@ public class MainWindow extends JFrame{
 
 	public GameBoard getGameBoard() {
 		return this.gb;
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		this.dispose();
+		System.exit(0);
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

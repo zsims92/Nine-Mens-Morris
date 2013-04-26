@@ -62,7 +62,7 @@ public class GamePanel extends JPanel implements MouseListener, ActionListener{
          this.setBackground(Color.WHITE);
          this.addMouseListener(this);
          
-         int delay = 5;
+         int delay = 500;
          new Timer(delay, this).start();
 	}	
 	

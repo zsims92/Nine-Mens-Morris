@@ -2,10 +2,15 @@ package nmm.view.gameBoard;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -35,7 +40,7 @@ public class GameBoard extends JPanel implements ActionListener{
 	private JPanel topPanel;
 	private JPanel scorePanel;
 	private Timer timer;
-	
+	private BufferedImage board;
 	/***
 	 * The constructor for the GameBoard
 	 * The gamemodel is used by itself and
@@ -58,18 +63,24 @@ public class GameBoard extends JPanel implements ActionListener{
 		
 		this.topPanel = new JPanel();
 		this.scorePanel = new JPanel();
+ 		try {
+			this.board = ImageIO.read(new File("resources\\boardBG.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 				
 		p1Name = new JLabel(this.gameModel.getPlayer1().getName());
 		p2Name = new JLabel(this.gameModel.getPlayer2().getName());
 		p1Score = new JLabel("Score: " + String.valueOf(this.gameModel.getPlayer1().getScore()));
 		p2Score = new JLabel("Score: " + String.valueOf(this.gameModel.getPlayer1().getScore()));
-		currentPlayer = new JLabel(this.gameModel.getCurrPlayer().getName() + ", " + this.gameModel.getPhaseText());
+		currentPlayer = new JLabel(this.gameModel.getCurrPlayer().getName().trim() + ", " + this.gameModel.getPhaseText().trim());
 		error = new JLabel("               ");
 		
-		p1Name.setFont(new java.awt.Font("Times New Roman", 0, 18));
-		p2Name.setFont(new java.awt.Font("Times New Roman", 0, 18));
-		currentPlayer.setFont(new java.awt.Font("Times New Roman", 0, 30));
-		error.setFont(new java.awt.Font("Times New Roman", 0, 18));
+		p1Name.setFont(new java.awt.Font("Times New Roman", 0, 24));
+		p2Name.setFont(new java.awt.Font("Times New Roman", 0, 24));
+		currentPlayer.setFont(new java.awt.Font("Times New Roman", Font.BOLD, 30));
+		error.setFont(new java.awt.Font("Times New Roman", Font.BOLD, 26));
+		error.setForeground(Color.RED);
 		p1Name.setHorizontalAlignment(JLabel.CENTER);
 		currentPlayer.setHorizontalAlignment(JLabel.CENTER);
 		p2Name.setHorizontalAlignment(JLabel.CENTER);
@@ -80,7 +91,7 @@ public class GameBoard extends JPanel implements ActionListener{
 		this.topPanel.setLayout(new BorderLayout());
 		this.topPanel.add(this.p1Name, BorderLayout.WEST);
 		this.topPanel.add(this.p2Name, BorderLayout.EAST);
-		this.topPanel.add(this.currentPlayer, BorderLayout.CENTER);
+		this.topPanel.add(this.currentPlayer, BorderLayout.NORTH);
 		
 		
 		this.scorePanel.setLayout(new BorderLayout());
@@ -98,8 +109,14 @@ public class GameBoard extends JPanel implements ActionListener{
 		this.add(this.gp, BorderLayout.CENTER);
 		this.add(this.p2, BorderLayout.EAST);
 		
-		this.setVisible(true);
+		this.topPanel.setOpaque(false);
+		this.scorePanel.setOpaque(false);
+		this.gp.setOpaque(false);
+		this.p1.setOpaque(false);
+		this.p2.setOpaque(false);
 		
+		this.setVisible(true);
+		this.setOpaque(false);
 		int delay = 1500;
         this.timer = new Timer(delay, this);
 	}
@@ -120,7 +137,6 @@ public class GameBoard extends JPanel implements ActionListener{
 			this.mw.showEnd();
 		}
 		
-		
 		if(this.gameModel.getCurrPlayer().isHuman())
 			this.currentPlayer.setText(this.gameModel.getCurrPlayer().getName() + ", " + this.gameModel.getPhaseText());
 		else
@@ -132,16 +148,21 @@ public class GameBoard extends JPanel implements ActionListener{
 		this.p1.repaint();
 		this.p2.repaint();
 		this.gp.repaint();
-		
 		int steps = 0;
 		while(this.gameModel.isMoving() && steps < 10){
 			this.gp.repaint();
+			drawBackground(g);
 			steps++;
 		}
 		
 		this.gp.repaint();
+		drawBackground(g);
 	}
 	
+	private void drawBackground(Graphics g) {
+		g.drawImage(board, 0, 0, 725, 725, 0, 0, 700, 700, null);
+	}
+		
 	
 	public void setError(String s, int delay){
 		this.timer.setDelay(delay);
