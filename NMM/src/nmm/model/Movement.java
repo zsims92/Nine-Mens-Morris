@@ -52,8 +52,8 @@ public class Movement {
 	}
 
 	private void calcChange() {
-		this.dx = (this.x2 - this.x1) / 150.f;
-		this.dy = (this.y2 - this.y1) / 150.f;
+		this.dx = (this.x2 - this.x1) / 50.f;
+		this.dy = (this.y2 - this.y1) / 50.f;
 	}
 
 	public float getCurX() {

@@ -9,8 +9,8 @@ public class Glow {
 	private boolean decreasing;
 	
 	public Glow(){
-		this.x = 48;
-		this.y = 48;
+		this.x = 35;
+		this.y = 35;
 		this.c = Color.WHITE;
 		this.decreasing = true;
 	}
@@ -30,19 +30,19 @@ public class Glow {
 	public void update() {
 		checkDirection();
 		if(this.decreasing){
-			this.x -= .04;
-			this.y -= .04;
+			this.x -= .1;
+			this.y -= .1;
 		}
 		else{
-			this.x += .04;
-			this.y += .04;
+			this.x += .1;
+			this.y += .1;
 		}
 	}
 
 	private void checkDirection() {
 		if(this.x <= 12 || this.y <= 12)
 			this.decreasing = false;
-		else if(this.x >= 48 || this.y >= 48)
+		else if(this.x >= 35 || this.y >= 35)
 			this.decreasing = true;
 	}
 }

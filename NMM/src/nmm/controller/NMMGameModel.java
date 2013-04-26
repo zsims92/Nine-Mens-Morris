@@ -53,6 +53,10 @@ public class NMMGameModel {
 			this.curPlayer = this.p1;
 		else
 			this.curPlayer = this.p2;
+		
+		if(this.gameMode == 0){
+			this.curPlayer = this.p1;
+		}
 		this.Victor = p1;
 		this.Loser = p2;
 	}
@@ -118,7 +122,8 @@ public class NMMGameModel {
 						if(this.currBoard.GetCurrentPhase(this.curPlayer) == Board.REMOVAL_PHASE){
 							this.pieceSelected.select(false);
 							this.pieceSelected = null;
-					}
+							this.moving = true;
+						}
 					}
 				}
 				else

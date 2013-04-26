@@ -2,6 +2,7 @@ package nmm.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -191,7 +192,8 @@ public class MainWindow extends JFrame implements WindowListener{
 		about.setText("<html>Created by:<br>"+"" +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zachary Sims</br><br>"+
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jerad Gerber</br><br>" +
-				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Travis Sweetser</br></html>");
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Travis Sweetser</br>" +
+				"<br>Version 2.3</html>");
 		JOptionPane.showMessageDialog(this, about);
 	}
 

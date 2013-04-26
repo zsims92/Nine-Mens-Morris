@@ -76,11 +76,13 @@ public class GameBoard extends JPanel implements ActionListener{
 		currentPlayer = new JLabel(this.gameModel.getCurrPlayer().getName().trim() + ", " + this.gameModel.getPhaseText().trim());
 		error = new JLabel("               ");
 		
-		p1Name.setFont(new java.awt.Font("Times New Roman", 0, 24));
-		p2Name.setFont(new java.awt.Font("Times New Roman", 0, 24));
+		p1Name.setFont(new java.awt.Font("Times New Roman", Font.BOLD, 24));
+		p2Name.setFont(new java.awt.Font("Times New Roman", Font.BOLD, 24));
+		p1Name.setForeground(nmm.getPlayer1().getColor());
+		p2Name.setForeground(nmm.getPlayer2().getColor());
 		currentPlayer.setFont(new java.awt.Font("Times New Roman", Font.BOLD, 30));
 		error.setFont(new java.awt.Font("Times New Roman", Font.BOLD, 26));
-		error.setForeground(Color.RED);
+		error.setForeground(Color.BLACK);
 		p1Name.setHorizontalAlignment(JLabel.CENTER);
 		currentPlayer.setHorizontalAlignment(JLabel.CENTER);
 		p2Name.setHorizontalAlignment(JLabel.CENTER);
@@ -160,7 +162,7 @@ public class GameBoard extends JPanel implements ActionListener{
 	}
 	
 	private void drawBackground(Graphics g) {
-		g.drawImage(board, 0, 0, 725, 725, 0, 0, 700, 700, null);
+		g.drawImage(board, 0, 0, 700, 700, 0, 0, 700, 700, null);
 	}
 		
 	
